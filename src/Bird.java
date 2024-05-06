@@ -11,9 +11,16 @@ public class Bird {
     public Bird() {
         x = 360/8;
         y = 640/2;
-        birdHeight = 38;
-        birdWidth = 54;
-        birdImage = new ImageIcon(getClass().getResource("bird.png")).getImage();
+        birdHeight = 31;
+        birdWidth = 44;
+        birdImage = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
+    }
+    public void switchImage(boolean swap){
+        if(swap){
+            birdImage = new ImageIcon(getClass().getResource("birdDown.png")).getImage();
+        }else{
+            birdImage = new ImageIcon(getClass().getResource("birdUp,.png")).getImage();
+        }
     }
 
     public int getX() {

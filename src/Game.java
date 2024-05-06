@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Random;
+
 
 public class Game extends JPanel {
     private int width;
@@ -31,12 +31,22 @@ public class Game extends JPanel {
         gameTimer = new Timer(1000/60, e -> {
             birdVelocity += 1;
             if(!gameOver){
+                if(birdVelocity >= -13){
+                    bird.switchImage(false);
+                }if(birdVelocity < 0){
+                    bird.switchImage(true);
+                }
                 bird.setY(bird.getY() + birdVelocity);
                 bird.setY(Math.max(bird.getY(),0));
-                bird.setY(Math.min(bird.getY(), height - bird.getBirdHeight()));
                 pipeVelocity = -5;
                 for(Pipe pipe : pipes){
                     pipe.setX(pipe.getX() + pipeVelocity);
+                    if(collision(bird,pipe)){
+                        gameOver = true;
+                    }
+                }
+                if(bird.getY() + bird.getBirdHeight() >= height){
+                    gameOver = true;
                 }
             }
             repaint();
@@ -59,6 +69,10 @@ public class Game extends JPanel {
         });
         placePipesTimer.start();
         setFocusable(true);
+        if(gameOver){
+            gameTimer.stop();
+            placePipesTimer.stop();
+        }
     }
     public void placePipes(){
         Pipe toppipe = new Pipe(topPipe);
@@ -72,6 +86,12 @@ public class Game extends JPanel {
         bottompipe.setX(width);
         bottompipe.setY(toppipe.getY() + toppipe.getPipeHeight() + openingSpace);
         pipes.add(bottompipe);
+    }
+    public boolean collision(Bird a, Pipe b) {
+        return a.getX() < b.getX() + b.getPipeWidth() &&
+                a.getX() + a.getBirdWidth() > b.getX() &&
+                a.getY() < b.getY() + b.getPipeHeight() &&
+                a.getY() + a.getBirdHeight() > b.getY();
     }
 
     @Override
