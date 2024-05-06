@@ -7,6 +7,7 @@ public class Pipe {
     private int pipeHeight;
     private int pipeWidth;
     private Image pipeImage;
+    private boolean passed;
 
     public Pipe(Image img) {
         y = 0;
@@ -53,5 +54,13 @@ public class Pipe {
 
     public void setPipeImage(Image pipeImage) {
         this.pipeImage = pipeImage;
+    }
+
+    public boolean isPassed() {
+        return passed;
+    }
+
+    public void setPassed(boolean passed) {
+        this.passed = passed;
     }
 }

@@ -19,7 +19,7 @@ public class Bird {
         if(swap){
             birdImage = new ImageIcon(getClass().getResource("birdDown.png")).getImage();
         }else{
-            birdImage = new ImageIcon(getClass().getResource("birdUp,.png")).getImage();
+            birdImage = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
         }
     }
 

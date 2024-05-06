@@ -18,9 +18,13 @@ public class Game extends JPanel {
     private int birdVelocity;
     private int pipeVelocity;
     private boolean gameOver;
+    private double score;
+    private int highScore;
     public Game() {
         width = 360;
         height = 640;
+        score = 0;
+        highScore = 0;
         gameOver = false;
         setPreferredSize(new Dimension(width, height));
         pipes = new ArrayList<>();
@@ -41,12 +45,20 @@ public class Game extends JPanel {
                 pipeVelocity = -5;
                 for(Pipe pipe : pipes){
                     pipe.setX(pipe.getX() + pipeVelocity);
+                    if(!pipe.isPassed() && bird.getX() > pipe.getX() + pipe.getPipeWidth()){
+                        score += 0.5;
+                        pipe.setPassed(true);
+
+                    }
                     if(collision(bird,pipe)){
                         gameOver = true;
                     }
                 }
                 if(bird.getY() + bird.getBirdHeight() >= height){
                     gameOver = true;
+                }
+                if(score>highScore){
+                    highScore = (int) score;
                 }
             }
             repaint();
@@ -61,9 +73,19 @@ public class Game extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
+                Bird b = new Bird();
                 if(e.getKeyCode() == KeyEvent.VK_SPACE){
                     birdVelocity = -13;
                     gameTimer.start();
+                    if(gameOver){
+                        bird.setY(b.getY());
+                        birdVelocity = 0;
+                        score = 0;
+                        pipes.clear();
+                        gameOver = false;
+                        gameTimer.start();
+                        placePipesTimer.start();
+                    }
                 }
             }
         });
@@ -101,6 +123,17 @@ public class Game extends JPanel {
         g.drawImage(bird.getBirdImage(),bird.getX(), bird.getY(),bird.getBirdWidth(),bird.getBirdHeight(),null);
         for(Pipe pipe : pipes){
             g.drawImage(pipe.getPipeImage(),pipe.getX(),pipe.getY(),pipe.getPipeWidth(),pipe.getPipeHeight(),null);
+        }
+        if(!gameOver){
+            g.setFont(new Font("Arial", Font.BOLD,30));
+            g.setColor(Color.white);
+            g.drawString("Score: " + (int)score,5,30);
+            g.drawString("High score: " + highScore,5,55);
+        }
+        if(gameOver){
+            g.setFont(new Font("Arial", Font.BOLD,60));
+            g.setColor(Color.white);
+            g.drawString("Game over", 20,320);
         }
     }
 }
