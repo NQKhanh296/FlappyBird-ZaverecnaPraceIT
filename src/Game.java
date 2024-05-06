@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -27,38 +29,48 @@ public class Game extends JPanel {
         topPipe = new ImageIcon(getClass().getResource("toppipe.png")).getImage();
         bird = new Bird();
         gameTimer = new Timer(1000/60, e -> {
+            birdVelocity += 1;
             if(!gameOver){
-                birdVelocity += 1;
                 bird.setY(bird.getY() + birdVelocity);
-                pipeVelocity = -1;
+                bird.setY(Math.max(bird.getY(),0));
+                bird.setY(Math.min(bird.getY(), height - bird.getBirdHeight()));
+                pipeVelocity = -5;
                 for(Pipe pipe : pipes){
                     pipe.setX(pipe.getX() + pipeVelocity);
                 }
             }
             repaint();
         });
-        placePipesTimer = new Timer(1500, e -> {
+        placePipesTimer = new Timer(1400, e -> {
             if(!gameOver){
                 placePipes();
-
             }
         });
-        gameTimer.start();
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(e.getKeyCode() == KeyEvent.VK_SPACE){
+                    birdVelocity = -13;
+                    gameTimer.start();
+                }
+            }
+        });
         placePipesTimer.start();
         setFocusable(true);
     }
     public void placePipes(){
         Pipe toppipe = new Pipe(topPipe);
-        Random random = new Random();
         int openingSpace = 160;
-        int randomPipeY = random.nextInt(300)+30;
+        int randomPipeY = (int) (toppipe.getY() - toppipe.getPipeHeight()/4 - Math.random()*(toppipe.getPipeHeight()/2));
         toppipe.setX(width);
         toppipe.setY(randomPipeY);
+        pipes.add(toppipe);
 
         Pipe bottompipe = new Pipe(bottomPipe);
         bottompipe.setX(width);
         bottompipe.setY(toppipe.getY() + toppipe.getPipeHeight() + openingSpace);
-        pipes.add(toppipe);
         pipes.add(bottompipe);
     }
 

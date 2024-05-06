@@ -12,9 +12,6 @@ public class Frame {
         jFrame.pack();
         game.requestFocus();
         jFrame.setVisible(true);
-
-
-
     }
 
 
