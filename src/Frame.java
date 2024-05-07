@@ -11,6 +11,7 @@ public class Frame {
         jFrame.add(game);
         jFrame.pack();
         game.requestFocus();
+        jFrame.setIconImage(new ImageIcon(getClass().getResource("birdDown.png")).getImage());
         jFrame.setVisible(true);
     }
 

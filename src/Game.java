@@ -2,7 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Game extends JPanel {
@@ -20,6 +23,7 @@ public class Game extends JPanel {
     private boolean gameOver;
     private double score;
     private int highScore;
+    private RandomNumber randomNumber = new RandomNumber();
     public Game() {
         width = 360;
         height = 640;
@@ -32,10 +36,11 @@ public class Game extends JPanel {
         bottomPipe = new ImageIcon(getClass().getResource("bottompipe.png")).getImage();
         topPipe = new ImageIcon(getClass().getResource("toppipe.png")).getImage();
         bird = new Bird();
+        randomNumber.start();
         gameTimer = new Timer(1000/60, e -> {
             birdVelocity += 1;
             if(!gameOver){
-                if(birdVelocity >= -13){
+                if(birdVelocity > 0){
                     bird.switchImage(false);
                 }if(birdVelocity < 0){
                     bird.switchImage(true);
@@ -68,17 +73,35 @@ public class Game extends JPanel {
                 placePipes();
             }
         });
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                birdVelocity = -13;
+                gameTimer.start();
+                placePipesTimer.start();
+                if(gameOver){
+                    bird.setY(640/2);
+                    birdVelocity = 0;
+                    score = 0;
+                    pipes.clear();
+                    gameOver = false;
+                    gameTimer.start();
+                    placePipesTimer.start();
+                }
+            }
+        });
 
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                Bird b = new Bird();
                 if(e.getKeyCode() == KeyEvent.VK_SPACE){
                     birdVelocity = -13;
                     gameTimer.start();
+                    placePipesTimer.start();
                     if(gameOver){
-                        bird.setY(b.getY());
+                        bird.setY(640/2);
                         birdVelocity = 0;
                         score = 0;
                         pipes.clear();
@@ -89,17 +112,21 @@ public class Game extends JPanel {
                 }
             }
         });
-        placePipesTimer.start();
         setFocusable(true);
         if(gameOver){
             gameTimer.stop();
             placePipesTimer.stop();
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     public void placePipes(){
         Pipe toppipe = new Pipe(topPipe);
-        int openingSpace = 160;
-        int randomPipeY = (int) (toppipe.getY() - toppipe.getPipeHeight()/4 - Math.random()*(toppipe.getPipeHeight()/2));
+        int openingSpace = 140;
+        int randomPipeY = randomNumber.getRandomNumber();
         toppipe.setX(width);
         toppipe.setY(randomPipeY);
         pipes.add(toppipe);
