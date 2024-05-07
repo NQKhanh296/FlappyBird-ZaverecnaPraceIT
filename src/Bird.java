@@ -15,13 +15,18 @@ public class Bird {
         birdWidth = 44;
         birdImage = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
     }
-    public void switchImage(boolean swap){
-        if(swap){
-            birdImage = new ImageIcon(getClass().getResource("birdDown.png")).getImage();
-        }else{
-            birdImage = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
+    public void switchImage(int swap){
+        Image birdDownImg = new ImageIcon(getClass().getResource("birdDown.png")).getImage();
+        Image birdUpImg = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
+        Image deadBirdImg = new ImageIcon(getClass().getResource("deadBird.png")).getImage();
+        switch (swap){
+            case 1 -> birdImage = birdDownImg;
+            case 2 -> birdImage = birdUpImg;
+            case 3 -> birdImage = deadBirdImg;
         }
+
     }
+    //Switch hight width
 
     public int getX() {
         return x;

@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Random;
 
 
 public class Game extends JPanel {
@@ -41,9 +40,9 @@ public class Game extends JPanel {
             birdVelocity += 1;
             if(!gameOver){
                 if(birdVelocity > 0){
-                    bird.switchImage(false);
+                    bird.switchImage(2);
                 }if(birdVelocity < 0){
-                    bird.switchImage(true);
+                    bird.switchImage(1);
                 }
                 bird.setY(bird.getY() + birdVelocity);
                 bird.setY(Math.max(bird.getY(),0));
@@ -56,7 +55,12 @@ public class Game extends JPanel {
 
                     }
                     if(collision(bird,pipe)){
-                        gameOver = true;
+                        bird.switchImage(3);
+                        placePipesTimer.stop();
+                        if(bird.getY() + bird.getBirdHeight() == height){
+                            gameOver = true;
+                        }
+
                     }
                 }
                 if(bird.getY() + bird.getBirdHeight() >= height){
@@ -115,7 +119,6 @@ public class Game extends JPanel {
         setFocusable(true);
         if(gameOver){
             gameTimer.stop();
-            placePipesTimer.stop();
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -147,10 +150,10 @@ public class Game extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(background,0,0,width,height,null);
-        g.drawImage(bird.getBirdImage(),bird.getX(), bird.getY(),bird.getBirdWidth(),bird.getBirdHeight(),null);
         for(Pipe pipe : pipes){
             g.drawImage(pipe.getPipeImage(),pipe.getX(),pipe.getY(),pipe.getPipeWidth(),pipe.getPipeHeight(),null);
         }
+        g.drawImage(bird.getBirdImage(),bird.getX(), bird.getY(),bird.getBirdWidth(),bird.getBirdHeight(),null);
         if(!gameOver){
             g.setFont(new Font("Arial", Font.BOLD,30));
             g.setColor(Color.white);
