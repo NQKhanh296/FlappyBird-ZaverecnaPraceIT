@@ -35,31 +35,15 @@ public class Pipe {
     public int getPipeHeight() {
         return pipeHeight;
     }
-
-    public void setPipeHeight(int pipeHeight) {
-        this.pipeHeight = pipeHeight;
-    }
-
     public int getPipeWidth() {
         return pipeWidth;
     }
-
-    public void setPipeWidth(int pipeWidth) {
-        this.pipeWidth = pipeWidth;
-    }
-
     public Image getPipeImage() {
         return pipeImage;
     }
-
-    public void setPipeImage(Image pipeImage) {
-        this.pipeImage = pipeImage;
-    }
-
     public boolean isPassed() {
         return passed;
     }
-
     public void setPassed(boolean passed) {
         this.passed = passed;
     }
