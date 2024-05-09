@@ -8,11 +8,11 @@ public class Ground {
     private int groundHeight;
     private Image groundImage;
 
-    public Ground() {
-        x = 0;
+    public Ground(int x) {
+        this.x = x;
         y = 579;
         groundHeight = 61;
-        groundWidth = 440;
+        groundWidth = 360;
         groundImage = new ImageIcon(getClass().getResource("ground.png")).getImage();
     }
 
