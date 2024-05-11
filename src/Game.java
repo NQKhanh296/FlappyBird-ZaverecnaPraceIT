@@ -29,7 +29,7 @@ public class Game extends JPanel {
         height = 640;
         score = 0;
         highScore = 0;
-        pipeAndGroundVelocity = -5;
+        pipeAndGroundVelocity = -4;
         gameOver = false;
         setPreferredSize(new Dimension(width, height));
         pipes = new ArrayList<>();
@@ -58,10 +58,12 @@ public class Game extends JPanel {
                     }
                     if(collision(bird,pipe)){
                         gameOver = true;
+                        groundTimer.stop();
                     }
                 }
                 if(bird.getY() + bird.getBirdHeight() >= height){
                     gameOver = true;
+                    groundTimer.stop();
                 }
                 if(score>highScore){
                     highScore = (int) score;
@@ -74,12 +76,12 @@ public class Game extends JPanel {
             }
             repaint();
         });
-        placePipesTimer = new Timer(1300, e -> {
+        placePipesTimer = new Timer(1400, e -> {
             if(!gameOver){
                 placePipes();
             }
         });
-        groundTimer = new Timer(1000/60, e -> {
+        groundTimer = new Timer(1000 / 60, e -> {
             ground1.setX(ground1.getX() + pipeAndGroundVelocity);
             ground2.setX(ground2.getX() + pipeAndGroundVelocity);
             if (ground1.getX() <= -ground1.getGroundWidth()) {
@@ -92,6 +94,7 @@ public class Game extends JPanel {
             repaint();
         });
         groundTimer.start();
+
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -107,6 +110,7 @@ public class Game extends JPanel {
                     gameOver = false;
                     birdTimer.start();
                     placePipesTimer.start();
+                    groundTimer.start();
                 }
             }
         });
@@ -126,6 +130,7 @@ public class Game extends JPanel {
                         gameOver = false;
                         birdTimer.start();
                         placePipesTimer.start();
+                        groundTimer.start();
                     }
                 }
             }
@@ -141,7 +146,7 @@ public class Game extends JPanel {
         Pipe toppipe = new Pipe(topPipe);
         Random random = new Random();
         int openingSpace = 150;
-        int randomPipeY = random.nextInt(101)-300;
+        int randomPipeY = random.nextInt(101)-400;
         toppipe.setX(width);
         toppipe.setY(randomPipeY);
         pipes.add(toppipe);
