@@ -76,12 +76,12 @@ public class Game extends JPanel {
             }
             repaint();
         });
-        placePipesTimer = new Timer(1400, e -> {
+        placePipesTimer = new Timer(1500, e -> {
             if(!gameOver){
                 placePipes();
             }
         });
-        groundTimer = new Timer(1000 / 60, e -> {
+        groundTimer = new Timer(1000/60, e -> {
             ground1.setX(ground1.getX() + pipeAndGroundVelocity);
             ground2.setX(ground2.getX() + pipeAndGroundVelocity);
             if (ground1.getX() <= -ground1.getGroundWidth()) {
@@ -146,7 +146,7 @@ public class Game extends JPanel {
         Pipe toppipe = new Pipe(topPipe);
         Random random = new Random();
         int openingSpace = 150;
-        int randomPipeY = random.nextInt(101)-400;
+        int randomPipeY = random.nextInt(151)-400;
         toppipe.setX(width);
         toppipe.setY(randomPipeY);
         pipes.add(toppipe);
@@ -166,11 +166,13 @@ public class Game extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         g.drawImage(background,0,0,width,height,null);
-        g.drawImage(ground1.getGroundImage(),ground1.getX(),ground1.getY(),ground1.getGroundWidth(),ground1.getGroundHeight(),null);
-        g.drawImage(ground2.getGroundImage(),ground2.getX(),ground2.getY(),ground2.getGroundWidth(),ground2.getGroundHeight(),null);
+        g.setColor(Color.BLACK);
+        g.drawLine(0,578,width,578);
         for(Pipe pipe : pipes){
             g.drawImage(pipe.getPipeImage(),pipe.getX(),pipe.getY(),pipe.getPipeWidth(),pipe.getPipeHeight(),null);
         }
+        g.drawImage(ground1.getGroundImage(),ground1.getX(),ground1.getY(),ground1.getGroundWidth(),ground1.getGroundHeight(),null);
+        g.drawImage(ground2.getGroundImage(),ground2.getX(),ground2.getY(),ground2.getGroundWidth(),ground2.getGroundHeight(),null);
         g.drawImage(bird.getBirdImage(),bird.getX(), bird.getY(),bird.getBirdWidth(),bird.getBirdHeight(),null);
         if(!gameOver){
             g.setFont(new Font("Arial", Font.BOLD,25));
@@ -185,5 +187,9 @@ public class Game extends JPanel {
             g.setColor(Color.white);
             g.drawString("Best: " + highScore,30, 365);
         }
+        g.setColor(Color.BLACK);
+        g.drawLine(0,579,width,579);
+        g.drawLine(0,578,width,578);
+        g.drawLine(0,577,width,577);
     }
 }

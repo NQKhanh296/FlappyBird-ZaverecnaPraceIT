@@ -47,4 +47,5 @@ public class Pipe {
     public void setPassed(boolean passed) {
         this.passed = passed;
     }
+
 }
