@@ -7,39 +7,26 @@ public class Bird {
     private int birdHeight;
     private int birdWidth;
     private Image birdImage;
-    private static int HEIGHT = 31;
-    private static int WIDTH = 44;
     private Image birdDownImg = new ImageIcon(getClass().getResource("birdDown.png")).getImage();
     private Image birdUpImg = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
-    private Image deadBirdImg = new ImageIcon(getClass().getResource("deadBird.png")).getImage();
+    private Image birdNormal = new ImageIcon(getClass().getResource("birdnormal.png")).getImage();
 
 
     public Bird() {
         x = 360/8;
         y = 640/3;
-        birdWidth = WIDTH;
-        birdHeight = HEIGHT;
-        birdImage = birdDownImg;
+        birdWidth = 44;
+        birdHeight = 31;
+        birdImage = birdNormal;
     }
+
     public void switchImage(int swap){
         switch (swap){
             case 1 -> birdImage = birdDownImg;
-            case 2 -> birdImage = birdUpImg;
-            case 3 -> birdImage = deadBirdImg;
+            case 2 -> birdImage = birdNormal;
+            case 3 -> birdImage = birdUpImg;
         }
 
-    }
-    public void switchWidthHeight(int swap){
-        switch (swap){
-            case 1 -> {
-                birdWidth = WIDTH;
-                birdHeight = HEIGHT;
-            }
-            case 2 -> {
-                birdWidth = HEIGHT;
-                birdHeight = WIDTH;
-            }
-        }
     }
 
     public int getX() {

@@ -24,12 +24,14 @@ public class Game extends JPanel {
     private boolean gameOver;
     private double score;
     private int highScore;
+    private int index;
+    private boolean imageLoop;
     public Game() {
         width = 360;
         height = 640;
         score = 0;
         highScore = 0;
-        pipeAndGroundVelocity = -4;
+        pipeAndGroundVelocity = -3;
         gameOver = false;
         setPreferredSize(new Dimension(width, height));
         pipes = new ArrayList<>();
@@ -39,15 +41,20 @@ public class Game extends JPanel {
         bird = new Bird();
         ground1 = new Ground(0);
         ground2 = new Ground(width);
+        index = 1;
+        imageLoop = true;
 
-        birdTimer = new Timer(1000/60, e -> {
+        birdTimer = new Timer(1000/55, e -> {
+
+            index++;
+            if (index > 3) {
+                index = 1;
+            }
+
+            bird.switchImage(index);
+
             birdVelocity += 1;
             if(!gameOver){
-                if(birdVelocity > 0){
-                    bird.switchImage(2);
-                }if(birdVelocity < 0){
-                    bird.switchImage(1);
-                }
                 bird.setY(bird.getY() + birdVelocity);
                 bird.setY(Math.max(bird.getY(),0));
                 for(Pipe pipe : pipes){
@@ -59,9 +66,10 @@ public class Game extends JPanel {
                     if(collision(bird,pipe)){
                         gameOver = true;
                         groundTimer.stop();
+                        imageLoop = false;
                     }
                 }
-                if(bird.getY() + bird.getBirdHeight() >= height){
+                if(bird.getY() + bird.getBirdHeight() >= height - ground1.getGroundHeight()){
                     gameOver = true;
                     groundTimer.stop();
                 }
@@ -81,7 +89,7 @@ public class Game extends JPanel {
                 placePipes();
             }
         });
-        groundTimer = new Timer(1000/60, e -> {
+        groundTimer = new Timer(1000/55, e -> {
             ground1.setX(ground1.getX() + pipeAndGroundVelocity);
             ground2.setX(ground2.getX() + pipeAndGroundVelocity);
             if (ground1.getX() <= -ground1.getGroundWidth()) {
@@ -108,6 +116,7 @@ public class Game extends JPanel {
                     score = 0;
                     pipes.clear();
                     gameOver = false;
+                    imageLoop = true;
                     birdTimer.start();
                     placePipesTimer.start();
                     groundTimer.start();
@@ -128,6 +137,7 @@ public class Game extends JPanel {
                         score = 0;
                         pipes.clear();
                         gameOver = false;
+                        imageLoop = true;
                         birdTimer.start();
                         placePipesTimer.start();
                         groundTimer.start();
@@ -167,7 +177,9 @@ public class Game extends JPanel {
     protected void paintComponent(Graphics g) {
         g.drawImage(background,0,0,width,height,null);
         g.setColor(Color.BLACK);
+        g.drawLine(0,579,width,579);
         g.drawLine(0,578,width,578);
+        g.drawLine(0,577,width,577);
         for(Pipe pipe : pipes){
             g.drawImage(pipe.getPipeImage(),pipe.getX(),pipe.getY(),pipe.getPipeWidth(),pipe.getPipeHeight(),null);
         }
@@ -177,7 +189,7 @@ public class Game extends JPanel {
         if(!gameOver){
             g.setFont(new Font("Arial", Font.BOLD,25));
             g.setColor(Color.white);
-            g.drawString(String.valueOf((int)score),width/2,30);
+            g.drawString(String.valueOf((int)score),width/2 - 10,30);
         }
         if(gameOver){
             g.setFont(new Font("Arial", Font.BOLD,60));
@@ -185,7 +197,7 @@ public class Game extends JPanel {
             g.drawString("Game over", 20,320);
             g.setFont(new Font("Arial", Font.BOLD,40));
             g.setColor(Color.white);
-            g.drawString("Best: " + highScore,30, 365);
+            g.drawString("Best: " + highScore,20, 365);
         }
         g.setColor(Color.BLACK);
         g.drawLine(0,579,width,579);
