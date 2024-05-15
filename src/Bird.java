@@ -6,10 +6,12 @@ public class Bird {
     private int y;
     private int birdHeight;
     private int birdWidth;
+    private int index;
     private Image birdImage;
     private Image birdDownImg = new ImageIcon(getClass().getResource("birdDown.png")).getImage();
     private Image birdUpImg = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
     private Image birdNormal = new ImageIcon(getClass().getResource("birdnormal.png")).getImage();
+    private Timer timer;
 
 
     public Bird() {
@@ -18,6 +20,15 @@ public class Bird {
         birdWidth = 44;
         birdHeight = 31;
         birdImage = birdNormal;
+        index = 0;
+        timer = new Timer(110, e -> {
+            index++;
+            if (index > 3) {
+                index = 1;
+            }
+
+            switchImage(index);
+        });
     }
 
     public void switchImage(int swap){
@@ -48,4 +59,12 @@ public class Bird {
         return birdImage;
     }
 
+    public void setTimer(boolean b) {
+        if(b){
+            timer.start();
+        }
+        if(!b){
+            timer.stop();
+        }
+    }
 }
