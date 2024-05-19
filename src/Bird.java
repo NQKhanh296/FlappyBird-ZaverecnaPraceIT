@@ -17,11 +17,11 @@ public class Bird {
     public Bird() {
         x = 360/8;
         y = 640/3;
-        birdWidth = 44;
-        birdHeight = 31;
+        birdWidth = 43;
+        birdHeight = 30;
         birdImage = birdNormal;
         index = 0;
-        timer = new Timer(110, e -> {
+        timer = new Timer(120, e -> {
             index++;
             if (index > 3) {
                 index = 1;
