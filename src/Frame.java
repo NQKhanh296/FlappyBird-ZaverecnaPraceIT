@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.util.Objects;
 
 public class Frame {
     public Frame(){
@@ -11,7 +12,7 @@ public class Frame {
         jFrame.add(game);
         jFrame.pack();
         game.requestFocus();
-        jFrame.setIconImage(new ImageIcon(getClass().getResource("birdDown.png")).getImage());
+        jFrame.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("birdNormal.png"))).getImage());
         jFrame.setVisible(true);
     }
 

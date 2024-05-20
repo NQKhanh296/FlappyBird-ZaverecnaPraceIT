@@ -17,6 +17,7 @@ public class Game extends JPanel {
     private Bird bird;
     private Ground ground1;
     private Ground ground2;
+    private GetReadyImg getReadyImg;
     private Timer birdTimer;
     private Timer placePipesTimer;
     private Timer groundTimer;
@@ -41,6 +42,7 @@ public class Game extends JPanel {
         bird.setTimer(true);
         ground1 = new Ground(0);
         ground2 = new Ground(width);
+        getReadyImg = new GetReadyImg();
         addTimer();
         addMouseAndKeyListener();
         setFocusable(true);
@@ -65,12 +67,14 @@ public class Game extends JPanel {
                         gameOver = true;
                         groundTimer.stop();
                         bird.setTimer(false);
+                        bird.switchImage(4);
                     }
                 }
                 if(bird.getY() >= height - ground1.getGroundHeight()-bird.getBirdHeight()){
                     gameOver = true;
                     groundTimer.stop();
                     bird.setTimer(false);
+                    bird.switchImage(4);
                 }
                 if(score>highScore){
                     highScore = (int) score;

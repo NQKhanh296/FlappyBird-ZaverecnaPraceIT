@@ -11,6 +11,7 @@ public class Bird {
     private Image birdDownImg = new ImageIcon(getClass().getResource("birdDown.png")).getImage();
     private Image birdUpImg = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
     private Image birdNormal = new ImageIcon(getClass().getResource("birdnormal.png")).getImage();
+    private Image deadBird = new ImageIcon(getClass().getResource("deadBird.png")).getImage();
     private Timer timer;
 
 
@@ -21,7 +22,7 @@ public class Bird {
         birdHeight = 30;
         birdImage = birdNormal;
         index = 0;
-        timer = new Timer(120, e -> {
+        timer = new Timer(110, e -> {
             index++;
             if (index > 3) {
                 index = 1;
@@ -36,6 +37,7 @@ public class Bird {
             case 1 -> birdImage = birdDownImg;
             case 2 -> birdImage = birdNormal;
             case 3 -> birdImage = birdUpImg;
+            case 4 -> birdImage = deadBird;
         }
 
     }
