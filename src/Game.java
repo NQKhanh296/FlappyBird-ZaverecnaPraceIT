@@ -1,31 +1,28 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 public class Game extends JPanel {
     private int width;
     private int height;
+    private int birdVelocity;
+    private int pipeAndGroundVelocity;
+    private int highScore;
+    private double score;
+    private boolean gameOver;
     private Image background;
     private Image bottomPipe;
     private Image topPipe;
-    private ArrayList<Pipe> pipes;
     private Bird bird;
     private Ground ground1;
     private Ground ground2;
-    private GetReadyImg getReadyImg;
     private Timer birdTimer;
     private Timer placePipesTimer;
     private Timer groundTimer;
-    private int birdVelocity;
-    private int pipeAndGroundVelocity;
-    private boolean gameOver;
-    private double score;
-    private int highScore;
+    private ArrayList<Pipe> pipes;
+    private JButton startButton;
     public Game() {
         width = 360;
         height = 640;
@@ -42,9 +39,21 @@ public class Game extends JPanel {
         bird.setTimer(true);
         ground1 = new Ground(0);
         ground2 = new Ground(width);
-        getReadyImg = new GetReadyImg();
         addTimer();
         addMouseAndKeyListener();
+        setLayout(null);
+        ImageIcon startButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("startButton.png")));
+        startButton = new JButton(startButtonImage);
+        startButton.setBounds(128,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
+        add(startButton);
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                birdTimer.start();
+                placePipesTimer.start();
+                startButton.setVisible(false);
+            }
+        });
         setFocusable(true);
         if(gameOver){
             birdTimer.stop();
@@ -125,8 +134,6 @@ public class Game extends JPanel {
 
     public void addBirdVelocity() {
         birdVelocity = -13;
-        birdTimer.start();
-        placePipesTimer.start();
         if(gameOver){
             bird.setY(640/3);
             birdVelocity = 0;
@@ -186,5 +193,6 @@ public class Game extends JPanel {
             g.setColor(Color.white);
             g.drawString("Best: " + highScore,20, 365);
         }
+
     }
 }
