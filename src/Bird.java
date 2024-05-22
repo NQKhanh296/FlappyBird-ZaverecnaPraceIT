@@ -22,7 +22,7 @@ public class Bird {
         birdHeight = 30;
         birdImage = birdNormal;
         index = 0;
-        timer = new Timer(110, e -> {
+        timer = new Timer(120, e -> {
             index++;
             if (index > 3) {
                 index = 1;

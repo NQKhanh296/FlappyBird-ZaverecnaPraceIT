@@ -23,6 +23,7 @@ public class Game extends JPanel {
     private Timer groundTimer;
     private ArrayList<Pipe> pipes;
     private JButton startButton;
+    private JButton OKButton;
     public Game() {
         width = 360;
         height = 640;
@@ -40,32 +41,51 @@ public class Game extends JPanel {
         ground1 = new Ground(0);
         ground2 = new Ground(width);
         addTimer();
-        addMouseAndKeyListener();
         setLayout(null);
         ImageIcon startButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("startButton.png")));
+        ImageIcon OKButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("OKButton.png")));
+
         startButton = new JButton(startButtonImage);
         startButton.setBounds(128,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
         add(startButton);
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                birdTimer.start();
-                placePipesTimer.start();
+                addMouseAndKeyListener();
                 startButton.setVisible(false);
             }
         });
+        OKButton = new JButton(OKButtonImage);
+        OKButton.setBounds(128,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
+        add(OKButton);
+        OKButton.setVisible(false);
+        OKButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(gameOver){
+                    gameOver = false;
+                    OKButton.setVisible(false);
+                    OKButton.doClick(200);
+                    bird.setY(640/3);
+                    birdVelocity = 0;
+                    score = 0;
+                    pipes.clear();
+                    bird.setTimer(true);
+                    groundTimer.start();
+                    startButton.setVisible(true);
+                }
+            }
+        });
+
         setFocusable(true);
-        if(gameOver){
-            birdTimer.stop();
-            placePipesTimer.stop();
-        }
     }
     public void addTimer(){
         birdTimer = new Timer(1000/50, e -> {
             birdVelocity += 1;
             if(!gameOver){
-                bird.setY(bird.getY() + birdVelocity);
                 bird.setY(Math.max(bird.getY(),0));
+                bird.setY(Math.min(bird.getY(),height - ground1.getGroundHeight() - bird.getBirdHeight()));
+                bird.setY(bird.getY() + birdVelocity);
                 for(Pipe pipe : pipes){
                     pipe.setX(pipe.getX() + pipeAndGroundVelocity);
                     if(!pipe.isPassed() && bird.getX() > pipe.getX() + pipe.getPipeWidth()){
@@ -74,15 +94,22 @@ public class Game extends JPanel {
                     }
                     if(collision(bird,pipe)){
                         gameOver = true;
+                        OKButton.setVisible(true);
                         groundTimer.stop();
                         bird.setTimer(false);
+                        birdTimer.stop();
+                        placePipesTimer.stop();
                         bird.switchImage(4);
                     }
                 }
-                if(bird.getY() >= height - ground1.getGroundHeight()-bird.getBirdHeight()){
+                if(bird.getY() == Math.max(bird.getY(),height - ground1.getGroundHeight() - bird.getBirdHeight())){
+                    System.out.println(bird.getY());
                     gameOver = true;
+                    OKButton.setVisible(true);
                     groundTimer.stop();
                     bird.setTimer(false);
+                    birdTimer.stop();
+                    placePipesTimer.stop();
                     bird.switchImage(4);
                 }
                 if(score>highScore){
@@ -134,17 +161,8 @@ public class Game extends JPanel {
 
     public void addBirdVelocity() {
         birdVelocity = -13;
-        if(gameOver){
-            bird.setY(640/3);
-            birdVelocity = 0;
-            score = 0;
-            pipes.clear();
-            gameOver = false;
-            birdTimer.start();
-            placePipesTimer.start();
-            groundTimer.start();
-            bird.setTimer(true);
-        }
+        birdTimer.start();
+        placePipesTimer.start();
     }
 
     public void placePipes(){
@@ -176,11 +194,8 @@ public class Game extends JPanel {
         }
         g.drawImage(ground1.getGroundImage(),ground1.getX(),ground1.getY(),ground1.getGroundWidth(),ground1.getGroundHeight(),null);
         g.drawImage(ground2.getGroundImage(),ground2.getX(),ground2.getY(),ground2.getGroundWidth(),ground2.getGroundHeight(),null);
-        g.setColor(Color.BLACK);
-        g.drawLine(0,578,width,578);
-        g.drawLine(0,577,width,577);
         g.drawImage(bird.getBirdImage(),bird.getX(), bird.getY(),bird.getBirdWidth(),bird.getBirdHeight(),null);
-        if(!gameOver){
+        if(!startButton.isVisible() && !gameOver){
             g.setFont(new Font("Arial", Font.BOLD,30));
             g.setColor(Color.white);
             g.drawString(String.valueOf((int)score),width/2 - 10,30);
