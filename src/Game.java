@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -24,6 +26,7 @@ public class Game extends JPanel {
     private ArrayList<Pipe> pipes;
     private JButton startButton;
     private JButton OKButton;
+    private Font flappyBirdFont;
     public Game() {
         width = 360;
         height = 640;
@@ -41,50 +44,26 @@ public class Game extends JPanel {
         ground1 = new Ground(0);
         ground2 = new Ground(width);
         addTimer();
-        setLayout(null);
-        ImageIcon startButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("startButton.png")));
-        ImageIcon OKButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("OKButton.png")));
-
-        startButton = new JButton(startButtonImage);
-        startButton.setBounds(128,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
-        add(startButton);
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addMouseAndKeyListener();
-                startButton.setVisible(false);
-            }
-        });
-        OKButton = new JButton(OKButtonImage);
-        OKButton.setBounds(128,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
-        add(OKButton);
-        OKButton.setVisible(false);
-        OKButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(gameOver){
-                    gameOver = false;
-                    OKButton.setVisible(false);
-                    OKButton.doClick(200);
-                    bird.setY(640/3);
-                    birdVelocity = 0;
-                    score = 0;
-                    pipes.clear();
-                    bird.setTimer(true);
-                    groundTimer.start();
-                    startButton.setVisible(true);
-                }
-            }
-        });
-
+        addButtons();
+        try {
+            InputStream fontStream = getClass().getResourceAsStream("flappyBirdFont.ttf");
+            assert fontStream != null;
+            flappyBirdFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
         setFocusable(true);
     }
     public void addTimer(){
         birdTimer = new Timer(1000/50, e -> {
             birdVelocity += 1;
-            if(!gameOver){
-                bird.setY(Math.max(bird.getY(),0));
-                bird.setY(Math.min(bird.getY(),height - ground1.getGroundHeight() - bird.getBirdHeight()));
+            bird.setY(Math.max(bird.getY(),0));
+            bird.setY(Math.min(bird.getY(),height - ground1.getGroundHeight() - bird.getBirdHeight()));
+            int targetY = height - ground1.getGroundHeight() - bird.getBirdHeight();
+            if(!gameOver && Math.abs(bird.getY() - targetY) < 3){
+                setGameOver();
+            }
+            if(!gameOver && bird.getY() + bird.getBirdHeight() < height - ground1.getGroundHeight()){
                 bird.setY(bird.getY() + birdVelocity);
                 for(Pipe pipe : pipes){
                     pipe.setX(pipe.getX() + pipeAndGroundVelocity);
@@ -93,24 +72,8 @@ public class Game extends JPanel {
                         pipe.setPassed(true);
                     }
                     if(collision(bird,pipe)){
-                        gameOver = true;
-                        OKButton.setVisible(true);
-                        groundTimer.stop();
-                        bird.setTimer(false);
-                        birdTimer.stop();
-                        placePipesTimer.stop();
-                        bird.switchImage(4);
+                        setGameOver();
                     }
-                }
-                if(bird.getY() == Math.max(bird.getY(),height - ground1.getGroundHeight() - bird.getBirdHeight())){
-                    System.out.println(bird.getY());
-                    gameOver = true;
-                    OKButton.setVisible(true);
-                    groundTimer.stop();
-                    bird.setTimer(false);
-                    birdTimer.stop();
-                    placePipesTimer.stop();
-                    bird.switchImage(4);
                 }
                 if(score>highScore){
                     highScore = (int) score;
@@ -148,7 +111,6 @@ public class Game extends JPanel {
                 addBirdVelocity();
             }
         });
-
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -158,13 +120,11 @@ public class Game extends JPanel {
             }
         });
     }
-
     public void addBirdVelocity() {
         birdVelocity = -13;
         birdTimer.start();
         placePipesTimer.start();
     }
-
     public void placePipes(){
         Pipe toppipe = new Pipe(topPipe);
         Random random = new Random();
@@ -173,7 +133,6 @@ public class Game extends JPanel {
         toppipe.setX(width);
         toppipe.setY(randomPipeY);
         pipes.add(toppipe);
-
         Pipe bottompipe = new Pipe(bottomPipe);
         bottompipe.setX(width);
         bottompipe.setY(toppipe.getY() + toppipe.getPipeHeight() + openingSpace);
@@ -185,7 +144,50 @@ public class Game extends JPanel {
                 a.getY() < b.getY() + b.getPipeHeight() &&
                 a.getY() + a.getBirdHeight() > b.getY();
     }
-
+    public void setGameOver(){
+        gameOver = true;
+        OKButton.setVisible(true);
+        groundTimer.stop();
+        bird.setTimer(false);
+        birdTimer.stop();
+        placePipesTimer.stop();
+        bird.switchImage(4);
+    }
+    public void addButtons(){
+        setLayout(null);
+        ImageIcon startButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("startButton.png")));
+        ImageIcon OKButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("OKButton.png")));
+        startButton = new JButton(startButtonImage);
+        startButton.setBounds(128,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
+        add(startButton);
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addMouseAndKeyListener();
+                startButton.setVisible(false);
+            }
+        });
+        OKButton = new JButton(OKButtonImage);
+        OKButton.setBounds(128,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
+        add(OKButton);
+        OKButton.setVisible(false);
+        OKButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(gameOver){
+                    gameOver = false;
+                    OKButton.setVisible(false);
+                    bird.setY(640/3);
+                    birdVelocity = 0;
+                    score = 0;
+                    pipes.clear();
+                    bird.setTimer(true);
+                    groundTimer.start();
+                    startButton.setVisible(true);
+                }
+            }
+        });
+    }
     @Override
     protected void paintComponent(Graphics g) {
         g.drawImage(background,0,0,width,height,null);
@@ -196,7 +198,7 @@ public class Game extends JPanel {
         g.drawImage(ground2.getGroundImage(),ground2.getX(),ground2.getY(),ground2.getGroundWidth(),ground2.getGroundHeight(),null);
         g.drawImage(bird.getBirdImage(),bird.getX(), bird.getY(),bird.getBirdWidth(),bird.getBirdHeight(),null);
         if(!startButton.isVisible() && !gameOver){
-            g.setFont(new Font("Arial", Font.BOLD,30));
+            g.setFont(flappyBirdFont.deriveFont(Font.PLAIN,30));
             g.setColor(Color.white);
             g.drawString(String.valueOf((int)score),width/2 - 10,30);
         }
@@ -208,6 +210,5 @@ public class Game extends JPanel {
             g.setColor(Color.white);
             g.drawString("Best: " + highScore,20, 365);
         }
-
     }
 }

@@ -4,9 +4,9 @@ import java.awt.*;
 public class Pipe {
     private int x;
     private int y;
-    private int pipeHeight;
-    private int pipeWidth;
-    private Image pipeImage;
+    private final int pipeHeight;
+    private final int pipeWidth;
+    private final Image pipeImage;
     private boolean passed;
 
     public Pipe(Image img) {

@@ -4,15 +4,15 @@ import java.awt.*;
 public class Bird {
     private int x;
     private int y;
-    private int birdHeight;
-    private int birdWidth;
+    private final int birdHeight;
+    private final int birdWidth;
     private int index;
     private Image birdImage;
-    private Image birdDownImg = new ImageIcon(getClass().getResource("birdDown.png")).getImage();
-    private Image birdUpImg = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
-    private Image birdNormal = new ImageIcon(getClass().getResource("birdnormal.png")).getImage();
-    private Image deadBird = new ImageIcon(getClass().getResource("deadBird.png")).getImage();
-    private Timer timer;
+    private final Image birdDownImg = new ImageIcon(getClass().getResource("birdDown.png")).getImage();
+    private final Image birdUpImg = new ImageIcon(getClass().getResource("birdUp.png")).getImage();
+    private final Image birdNormal = new ImageIcon(getClass().getResource("birdnormal.png")).getImage();
+    private final Image deadBird = new ImageIcon(getClass().getResource("deadBird.png")).getImage();
+    private final Timer timer;
 
 
     public Bird() {
