@@ -11,9 +11,9 @@ public class Pipe {
 
     public Pipe(Image img) {
         y = 0;
-        pipeHeight = 512;
-        pipeWidth = 64;
         pipeImage = img;
+        pipeHeight = pipeImage.getHeight(null);
+        pipeWidth = pipeImage.getWidth(null);
     }
 
     public int getX() {

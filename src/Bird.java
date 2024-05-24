@@ -18,9 +18,9 @@ public class Bird {
     public Bird() {
         x = 360/8;
         y = 640/3;
-        birdWidth = 43;
-        birdHeight = 30;
         birdImage = birdNormal;
+        birdWidth = birdImage.getWidth(null);
+        birdHeight = birdImage.getHeight(null);
         index = 0;
         timer = new Timer(120, e -> {
             index++;

@@ -10,10 +10,10 @@ public class Ground {
 
     public Ground(int x) {
         this.x = x;
-        y = 572;
-        groundHeight = 68;
-        groundWidth = 360;
         groundImage = new ImageIcon(getClass().getResource("ground.png")).getImage();
+        groundHeight = groundImage.getHeight(null);
+        groundWidth = groundImage.getWidth(null);
+        y = 648 - groundHeight;
     }
 
     public void setX(int x) {
