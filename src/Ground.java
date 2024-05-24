@@ -13,7 +13,7 @@ public class Ground {
         groundImage = new ImageIcon(getClass().getResource("ground.png")).getImage();
         groundHeight = groundImage.getHeight(null);
         groundWidth = groundImage.getWidth(null);
-        y = 648 - groundHeight;
+        y = Game.HEIGHT - groundHeight;
     }
 
     public void setX(int x) {

@@ -8,12 +8,12 @@ public class GameLogo {
     private int height;
     private Image logoImage;
 
-    public GameLogo(int x, int y) {
-        this.x = x;
-        this.y = y;
-        width = 445;
-        height = 120;
+    public GameLogo() {
         logoImage = new ImageIcon(getClass().getResource("flappyBirdGameLogo.png")).getImage();
+        width = logoImage.getWidth(null);
+        height = logoImage.getHeight(null);
+        x = (Game.WIDTH - width - Bird.WIDTH)/2;
+        y = Game.HEIGHT / 3;
     }
 
     public int getY() {

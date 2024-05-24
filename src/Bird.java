@@ -4,6 +4,8 @@ import java.awt.*;
 public class Bird {
     private int x;
     private int y;
+    public static int WIDTH;
+    public static int HEIGHT;
     private final int birdHeight;
     private final int birdWidth;
     private int index;
@@ -16,13 +18,15 @@ public class Bird {
 
 
     public Bird() {
-        x = 360/8;
-        y = 640/3;
+        x = Game.WIDTH / 8;
+        y = Game.HEIGHT / 3;
         birdImage = birdNormal;
-        birdWidth = birdImage.getWidth(null);
-        birdHeight = birdImage.getHeight(null);
+        WIDTH = birdImage.getWidth(null);
+        HEIGHT = birdImage.getHeight(null);
+        birdWidth = WIDTH;
+        birdHeight = HEIGHT;
         index = 0;
-        timer = new Timer(120, e -> {
+        timer = new Timer(110, e -> {
             index++;
             if (index > 3) {
                 index = 1;
