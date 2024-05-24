@@ -115,14 +115,18 @@ public class Game extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                addBirdVelocity();
+                if(!gameOver && !startButton.isVisible()) {
+                    addBirdVelocity();
+                }
             }
         });
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_SPACE){
-                    addBirdVelocity();
+                if(!gameOver && !startButton.isVisible()) {
+                    if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                        addBirdVelocity();
+                    }
                 }
             }
         });
@@ -208,7 +212,7 @@ public class Game extends JPanel {
         if(!startButton.isVisible() && !gameOver){
             g.setFont(flappyBirdFont.deriveFont(Font.PLAIN,35));
             g.setColor(Color.white);
-            g.drawString(String.valueOf((int)score),width/2 - 12,30);
+            g.drawString(String.valueOf((int)score),width/2 - 12,40);
         }
         if(gameOver){
             g.drawImage(gameOverImg,(width - gameOverImg.getWidth(null))/2,200,gameOverImg.getWidth(null),gameOverImg.getHeight(null),null);
