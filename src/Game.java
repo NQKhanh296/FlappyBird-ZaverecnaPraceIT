@@ -77,6 +77,12 @@ public class Game extends JPanel {
             if (ground2.getX() <= -ground2.getGroundWidth()) {
                 ground2.setX(ground1.getX() + ground1.getGroundWidth());
             }
+            if(startButton.isVisible()){
+                bird.setX(gameLogo.getX() + gameLogo.getWidth() + (bird.getBirdWidth() / 3));
+            }
+            if(!startButton.isVisible()){
+                bird.setX(width / 8);
+            }
             if(birdFlying){
                 birdVelocity += 1;
                 bird.setY(Math.max(bird.getY(), 0));
@@ -223,6 +229,9 @@ public class Game extends JPanel {
         if(!startButton.isVisible() && !birdFlying && !gameOver){
             g.drawImage(getReadyImg,(width - getReadyImg.getWidth(null))/2,120,getReadyImg.getWidth(null),getReadyImg.getHeight(null),null);
             g.drawImage(guideImg,(width - guideImg.getWidth(null))/2,height/3+45,guideImg.getWidth(null),guideImg.getHeight(null),null);
+        }
+        if(startButton.isVisible()){
+            g.drawImage(gameLogo.getLogoImage(),gameLogo.getX(),gameLogo.getY(),gameLogo.getWidth(),gameLogo.getHeight(),null);
         }
     }
 }

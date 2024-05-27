@@ -1,8 +1,7 @@
 import javax.swing.*;
 import java.util.Objects;
-
 public class Frame {
-    public Frame(){
+    public void startGame(){
         JFrame jFrame = new JFrame("Flappy Bird");
         jFrame.setSize(360, 640);
         jFrame.setDefaultCloseOperation(jFrame.EXIT_ON_CLOSE);
@@ -15,6 +14,4 @@ public class Frame {
         jFrame.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("birdNormal.png"))).getImage());
         jFrame.setVisible(true);
     }
-
-
 }
