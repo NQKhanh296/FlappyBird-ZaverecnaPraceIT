@@ -10,13 +10,13 @@ public class Bird {
     private final int birdHeight;
     private final int birdWidth;
     private int index;
-    private int delay;
     private Image birdImage;
     private final Image birdDownImg;
     private final Image birdUpImg;
     private final Image birdNormal;
     private final Image deadBird;
-    private final Timer timer;
+    private final Timer idleTimer;
+    private final Timer flyingTimer;
     public Bird() {
         Y = Game.HEIGHT / 3;
         birdDownImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("birdDown.png"))).getImage();
@@ -30,7 +30,14 @@ public class Bird {
         birdHeight = HEIGHT;
         y = Y;
         index = 0;
-        timer = new Timer(100, e -> {
+        idleTimer = new Timer(105, e -> {
+            index++;
+            if (index > 3) {
+                index = 1;
+            }
+            switchImage(index);
+        });
+        flyingTimer = new Timer(1000/45, e -> {
             index++;
             if (index > 3) {
                 index = 1;
@@ -67,18 +74,18 @@ public class Bird {
     public Image getBirdImage() {
         return birdImage;
     }
-    public void setTimer(boolean b) {
-        if(b){
-            timer.start();
+    public void setTimer(int timer, boolean start) {
+        if((timer == 1 && start)){
+            idleTimer.start();
         }
-        if(!b){
-            timer.stop();
+        if((timer == 1 && !start)){
+            idleTimer.stop();
         }
-    }
-    public void setDelay(int number) {
-        switch(number){
-            case 1 -> delay = 100;
-            case 2 -> delay = 40;
+        if((timer == 2 && start)){
+            flyingTimer.start();
+        }
+        if((timer == 2 && !start)){
+            flyingTimer.stop();
         }
     }
 }

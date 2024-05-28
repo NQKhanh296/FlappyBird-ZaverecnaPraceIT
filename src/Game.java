@@ -32,7 +32,7 @@ public class Game extends JPanel {
     private ArrayList<Pipe> pipes;
     private JButton startButton;
     private JButton OKButton;
-    private Font flappyBirdFont;
+    private FontImporter flappyBirdFont;
     public Game() {
         background = new ImageIcon(Objects.requireNonNull(getClass().getResource("flappybirdbg.png"))).getImage();
         bottomPipe = new ImageIcon(Objects.requireNonNull(getClass().getResource("bottompipe.png"))).getImage();
@@ -53,18 +53,13 @@ public class Game extends JPanel {
         pipes = new ArrayList<>();
         bird = new Bird();
         gameLogo = new GameLogo();
-        bird.setTimer(true);
+        bird.setTimer(1,true);
         ground1 = new Ground(0);
         ground2 = new Ground(width);
+        flappyBirdFont = new FontImporter("flappyBirdFont.TTF");
         addTimer();
         addButtons();
-        try {
-            InputStream fontStream = getClass().getResourceAsStream("flappyBirdFont.ttf");
-            assert fontStream != null;
-            flappyBirdFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
-        } catch (FontFormatException | IOException e) {
-            System.out.println("Error");
-        }
+        addMouseAndKeyListener();
         setFocusable(true);
     }
     public void addTimer(){
@@ -79,6 +74,7 @@ public class Game extends JPanel {
             }
             if(startButton.isVisible()){
                 bird.setX(gameLogo.getX() + gameLogo.getWidth() + (bird.getBirdWidth() / 3));
+
             }
             if(!startButton.isVisible()){
                 bird.setX(width / 8);
@@ -146,6 +142,8 @@ public class Game extends JPanel {
         birdVelocity = -13;
         birdFlying = true;
         placePipesTimer.start();
+        bird.setTimer(1,false);
+        bird.setTimer(2,true);
     }
     public void placePipes(){
         Pipe toppipe = new Pipe(topPipe);
@@ -169,7 +167,8 @@ public class Game extends JPanel {
     public void setGameOver(){
         gameOver = true;
         OKButton.setVisible(true);
-        bird.setTimer(false);
+        bird.setTimer(1,false);
+        bird.setTimer(2,false);
         birdAndGroundTimer.stop();
         placePipesTimer.stop();
         bird.switchImage(4);
@@ -183,7 +182,6 @@ public class Game extends JPanel {
         startButton.setBounds(x,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
         add(startButton);
         startButton.addActionListener(e -> {
-            addMouseAndKeyListener();
             startButton.setVisible(false);
         });
         OKButton = new JButton(OKButtonImage);
@@ -198,7 +196,8 @@ public class Game extends JPanel {
                 birdVelocity = 0;
                 score = 0;
                 pipes.clear();
-                bird.setTimer(true);
+                bird.setTimer(2,false);
+                bird.setTimer(1,true);
                 birdAndGroundTimer.start();
                 birdFlying = false;
                 startButton.setVisible(true);
@@ -215,13 +214,13 @@ public class Game extends JPanel {
         g.drawImage(ground2.getGroundImage(),ground2.getX(),ground2.getY(),ground2.getGroundWidth(),ground2.getGroundHeight(),null);
         g.drawImage(bird.getBirdImage(),bird.getX(), bird.getY(),bird.getBirdWidth(),bird.getBirdHeight(),null);
         if(!startButton.isVisible() && !gameOver){
-            g.setFont(flappyBirdFont.deriveFont(Font.PLAIN,35));
+            g.setFont(flappyBirdFont.getFont().deriveFont(Font.PLAIN,35));
             g.setColor(Color.white);
             g.drawString(String.valueOf((int)score),width/2 - 12,40);
         }
         if(gameOver){
             g.drawImage(gameOverImg,(width - gameOverImg.getWidth(null))/2,120,gameOverImg.getWidth(null),gameOverImg.getHeight(null),null);
-            g.setFont(flappyBirdFont.deriveFont(Font.PLAIN,38));
+            g.setFont(flappyBirdFont.getFont().deriveFont(Font.PLAIN,38));
             g.setColor(Color.white);
             g.drawString("Best: " + highScore,247, 250);
             g.drawString("Score: " + (int)score,35,250);
