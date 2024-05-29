@@ -9,7 +9,7 @@ public class GameLogo {
     private int height;
     private Image logoImage;
     public GameLogo() {
-        logoImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("flappyBirdGameLogo.png"))).getImage();
+        logoImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/flappyBirdGameLogo.png"))).getImage();
         width = logoImage.getWidth(null);
         height = logoImage.getHeight(null);
         x = (int) ((Game.WIDTH - width - Bird.WIDTH)/2.5);

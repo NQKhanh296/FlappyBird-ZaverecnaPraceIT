@@ -9,7 +9,7 @@ public class Ground {
     private final Image groundImage;
     public Ground(int x) {
         this.x = x;
-        groundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("ground.png"))).getImage();
+        groundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/ground.png"))).getImage();
         groundHeight = groundImage.getHeight(null);
         groundWidth = groundImage.getWidth(null);
         y = Game.HEIGHT - groundHeight;

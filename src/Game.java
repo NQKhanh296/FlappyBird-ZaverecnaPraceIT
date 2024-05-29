@@ -34,12 +34,12 @@ public class Game extends JPanel {
     private JButton OKButton;
     private FontImporter flappyBirdFont;
     public Game() {
-        background = new ImageIcon(Objects.requireNonNull(getClass().getResource("flappybirdbg.png"))).getImage();
-        bottomPipe = new ImageIcon(Objects.requireNonNull(getClass().getResource("bottompipe.png"))).getImage();
-        topPipe = new ImageIcon(Objects.requireNonNull(getClass().getResource("toppipe.png"))).getImage();
-        guideImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("guideImg.png"))).getImage();
-        getReadyImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("getReadyImg.png"))).getImage();
-        gameOverImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("gameOverImg.png"))).getImage();
+        background = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/flappybirdbg.png"))).getImage();
+        bottomPipe = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/bottompipe.png"))).getImage();
+        topPipe = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/toppipe.png"))).getImage();
+        guideImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/guideImg.png"))).getImage();
+        getReadyImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/getReadyImg.png"))).getImage();
+        gameOverImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/gameOverImg.png"))).getImage();
         WIDTH = background.getWidth(null);
         HEIGHT = background.getHeight(null);
         width = WIDTH;
@@ -56,7 +56,7 @@ public class Game extends JPanel {
         bird.setTimer(1,true);
         ground1 = new Ground(0);
         ground2 = new Ground(width);
-        flappyBirdFont = new FontImporter("flappyBirdFont.TTF");
+        flappyBirdFont = new FontImporter("Font/flappyBirdFont.TTF");
         addTimer();
         addButtons();
         addMouseAndKeyListener();
@@ -175,8 +175,8 @@ public class Game extends JPanel {
     }
     public void addButtons(){
         setLayout(null);
-        ImageIcon startButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("startButton.png")));
-        ImageIcon OKButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("OKButton.png")));
+        ImageIcon startButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/startButton.png")));
+        ImageIcon OKButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/OKButton.png")));
         startButton = new JButton(startButtonImage);
         int x = (width - startButtonImage.getIconWidth()) / 2;
         startButton.setBounds(x,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
