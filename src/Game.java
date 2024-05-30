@@ -9,35 +9,41 @@ import java.util.Random;
 public class Game extends JPanel {
     public static int WIDTH;
     public static int HEIGHT;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     private int birdVelocity;
-    private int pipeAndGroundVelocity;
+    private final int pipeAndGroundVelocity;
+    private final int grassVelocity;
     private int highScore;
     private double score;
     private boolean gameOver;
     private boolean birdFlying;
-    private Image background;
-    private Image bottomPipe;
-    private Image topPipe;
-    private Image guideImg;
-    private Image getReadyImg;
-    private Image gameOverImg;
-    private Bird bird;
-    private GameLogo gameLogo;
-    private Ground ground1;
-    private Ground ground2;
-    private FontImporter flappyBirdFont;
-    private SFXImporter flapSFX;
-    private SFXImporter hitSFX;
-    private SFXImporter pointSFX;
-    private SFXImporter clickSFX;
-    private SFXImporter backgroundMusicSFX;
+    private final Image background;
+    private final Image bottomPipe;
+    private final Image topPipe;
+    private final Image guideImg;
+    private final Image getReadyImg;
+    private final Image gameOverImg;
+    private final Image groundImg;
+    private final Image grassImg;
+    private final Bird bird;
+    private final GameLogo gameLogo;
+    private final Ground ground1;
+    private final Ground ground2;
+    private final Ground grass1;
+    private final Ground grass2;
+    private final FontImporter flappyBirdFont;
+    private final SFXImporter flapSFX;
+    private final SFXImporter hitSFX;
+    private final SFXImporter pointSFX;
+    private final SFXImporter clickSFX;
+    private final SFXImporter backgroundMusicSFX;
     private JButton startButton;
     private JButton OKButton;
     private Timer birdAndGroundTimer;
     private Timer placePipesTimer;
-    private ArrayList<Pipe> pipes;
+    private Timer grassTimer;
+    private final ArrayList<Pipe> pipes;
     public Game() {
         background = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/flappybirdbg.png"))).getImage();
         bottomPipe = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/bottompipe.png"))).getImage();
@@ -45,6 +51,9 @@ public class Game extends JPanel {
         guideImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/guideImg.png"))).getImage();
         getReadyImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/getReadyImg.png"))).getImage();
         gameOverImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/gameOverImg.png"))).getImage();
+        groundImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/ground.png"))).getImage();
+        grassImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/grass.png"))).getImage();
+
         WIDTH = background.getWidth(null);
         HEIGHT = background.getHeight(null);
         width = WIDTH;
@@ -52,6 +61,7 @@ public class Game extends JPanel {
         score = 0;
         highScore = HighScoreManager.loadHighScore();
         pipeAndGroundVelocity = -4;
+        grassVelocity = -1;
         gameOver = false;
         birdFlying = false;
         setPreferredSize(new Dimension(width, height));
@@ -59,8 +69,10 @@ public class Game extends JPanel {
         bird = new Bird();
         gameLogo = new GameLogo();
         bird.setTimer(1,true);
-        ground1 = new Ground(0);
-        ground2 = new Ground(width);
+        ground1 = new Ground(0,544,groundImg);
+        ground2 = new Ground(width,544,groundImg);
+        grass1 = new Ground(0,342,grassImg);
+        grass2 = new Ground(width,342,grassImg);
         flappyBirdFont = new FontImporter("Font/flappyBirdFont.TTF");
         flapSFX = new SFXImporter("Sfx/flapSFX.wav");
         hitSFX = new SFXImporter("Sfx/hitSFX.wav");
@@ -74,18 +86,29 @@ public class Game extends JPanel {
         setFocusable(true);
     }
     public void addTimer(){
+        grassTimer = new Timer(1000/50,e -> {
+            grass1.setX(grass1.getX() + grassVelocity);
+            grass2.setX(grass2.getX() + grassVelocity);
+            if (grass1.getX() <= -grass1.getWidth()) {
+                grass1.setX(grass2.getX() + grass2.getWidth());
+            }
+            if (grass2.getX() <= -grass2.getWidth()) {
+                grass2.setX(grass1.getX() + grass1.getWidth());
+            }
+            repaint();
+        });
+        grassTimer.start();
         birdAndGroundTimer = new Timer(1000/50, e -> {
             ground1.setX(ground1.getX() + pipeAndGroundVelocity);
             ground2.setX(ground2.getX() + pipeAndGroundVelocity);
-            if (ground1.getX() <= -ground1.getGroundWidth()) {
-                ground1.setX(ground2.getX() + ground2.getGroundWidth());
+            if (ground1.getX() <= -ground1.getWidth()) {
+                ground1.setX(ground2.getX() + ground2.getWidth());
             }
-            if (ground2.getX() <= -ground2.getGroundWidth()) {
-                ground2.setX(ground1.getX() + ground1.getGroundWidth());
+            if (ground2.getX() <= -ground2.getWidth()) {
+                ground2.setX(ground1.getX() + ground1.getWidth());
             }
             if(startButton.isVisible()){
                 bird.setX(gameLogo.getX() + gameLogo.getWidth() + (bird.getBirdWidth() / 3));
-
             }
             if(!startButton.isVisible()){
                 bird.setX(width / 8);
@@ -93,12 +116,12 @@ public class Game extends JPanel {
             if(birdFlying){
                 birdVelocity += 1;
                 bird.setY(Math.max(bird.getY(), 0));
-                bird.setY(Math.min(bird.getY(), height - ground1.getGroundHeight() - bird.getBirdHeight()));
-                int targetY = height - ground1.getGroundHeight() - bird.getBirdHeight();
+                bird.setY(Math.min(bird.getY(), height - ground1.getHeight() - bird.getBirdHeight()));
+                int targetY = height - ground1.getHeight() - bird.getBirdHeight();
                 if (!gameOver && Math.abs(bird.getY() - targetY) < 3) {
                     setGameOver();
                 }
-                if (!gameOver && bird.getY() + bird.getBirdHeight() < height - ground1.getGroundHeight()) {
+                if (!gameOver && bird.getY() + bird.getBirdHeight() < height - ground1.getHeight()) {
                     bird.setY(bird.getY() + birdVelocity);
                     for (Pipe pipe : pipes) {
                         pipe.setX(pipe.getX() + pipeAndGroundVelocity);
@@ -185,6 +208,7 @@ public class Game extends JPanel {
         bird.setTimer(2,false);
         birdAndGroundTimer.stop();
         placePipesTimer.stop();
+        grassTimer.stop();
         bird.switchImage(4);
         hitSFX.play();
         backgroundMusicSFX.stop();
@@ -196,7 +220,8 @@ public class Game extends JPanel {
         ImageIcon OKButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/OKButton.png")));
         startButton = new JButton(startButtonImage);
         int x = (width - startButtonImage.getIconWidth()) / 2;
-        startButton.setBounds(x,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
+        int y = 500;
+        startButton.setBounds(x,y,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
         add(startButton);
         startButton.addActionListener(e -> {
             clickSFX.play();
@@ -208,7 +233,7 @@ public class Game extends JPanel {
             });
         });
         OKButton = new JButton(OKButtonImage);
-        OKButton.setBounds(x,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
+        OKButton.setBounds(x,y,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
         add(OKButton);
         OKButton.setVisible(false);
         OKButton.addActionListener(e -> {
@@ -225,6 +250,7 @@ public class Game extends JPanel {
                         bird.setTimer(2,false);
                         bird.setTimer(1,true);
                         birdAndGroundTimer.start();
+                        grassTimer.start();
                         birdFlying = false;
                         startButton.setVisible(true);
                         clickSFX.setMicrosecondPosition(0);
@@ -234,32 +260,16 @@ public class Game extends JPanel {
             }
         });
     }
-    public void pause(){
-        birdAndGroundTimer.stop();
-        placePipesTimer.stop();
-        backgroundMusicSFX.close();
-        hitSFX.close();
-        pointSFX.close();
-        flapSFX.close();
-        clickSFX.close();
-    }
-    public void resume(){
-        birdAndGroundTimer.start();
-        placePipesTimer.start();
-        backgroundMusicSFX.open();
-        hitSFX.open();
-        pointSFX.open();
-        flapSFX.open();
-        clickSFX.open();
-    }
     @Override
     protected void paintComponent(Graphics g) {
         g.drawImage(background,0,0,width,height,null);
+        g.drawImage(grass1.getImage(),grass1.getX(),grass1.getY(),grass1.getWidth(),grass1.getHeight(),null);
+        g.drawImage(grass2.getImage(),grass2.getX(),grass2.getY(),grass2.getWidth(),grass2.getHeight(),null);
         for(Pipe pipe : pipes){
             g.drawImage(pipe.getPipeImage(),pipe.getX(),pipe.getY(),pipe.getPipeWidth(),pipe.getPipeHeight(),null);
         }
-        g.drawImage(ground1.getGroundImage(),ground1.getX(),ground1.getY(),ground1.getGroundWidth(),ground1.getGroundHeight(),null);
-        g.drawImage(ground2.getGroundImage(),ground2.getX(),ground2.getY(),ground2.getGroundWidth(),ground2.getGroundHeight(),null);
+        g.drawImage(ground1.getImage(),ground1.getX(),ground1.getY(),ground1.getWidth(),ground1.getHeight(),null);
+        g.drawImage(ground2.getImage(),ground2.getX(),ground2.getY(),ground2.getWidth(),ground2.getHeight(),null);
         g.drawImage(bird.getBirdImage(),bird.getX(), bird.getY(),bird.getBirdWidth(),bird.getBirdHeight(),null);
         if(!startButton.isVisible() && !gameOver){
             g.setFont(flappyBirdFont.getFont().deriveFont(Font.PLAIN,35));

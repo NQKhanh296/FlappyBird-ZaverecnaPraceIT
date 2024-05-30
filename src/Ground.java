@@ -1,18 +1,16 @@
-import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 public class Ground {
     private int x;
     private final int y;
-    private final int groundWidth;
-    private final int groundHeight;
-    private final Image groundImage;
-    public Ground(int x) {
+    private final int width;
+    private final int height;
+    private final Image image;
+    public Ground(int x, int y ,Image img) {
         this.x = x;
-        groundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/ground.png"))).getImage();
-        groundHeight = groundImage.getHeight(null);
-        groundWidth = groundImage.getWidth(null);
-        y = Game.HEIGHT - groundHeight;
+        image = img;
+        height = image.getHeight(null);
+        width = 504;
+        this.y = y;
     }
     public void setX(int x) {
         this.x = x;
@@ -23,13 +21,13 @@ public class Ground {
     public int getY() {
         return y;
     }
-    public int getGroundWidth() {
-        return groundWidth;
+    public int getWidth() {
+        return width;
     }
-    public int getGroundHeight() {
-        return groundHeight;
+    public int getHeight() {
+        return height;
     }
-    public Image getGroundImage() {
-        return groundImage;
+    public Image getImage() {
+        return image;
     }
 }
