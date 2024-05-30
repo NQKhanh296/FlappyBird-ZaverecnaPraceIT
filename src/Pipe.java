@@ -1,4 +1,9 @@
+import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Random;
+
 public class Pipe {
     private int x;
     private int y;
@@ -6,11 +11,13 @@ public class Pipe {
     private final int pipeWidth;
     private final Image pipeImage;
     private boolean passed;
+
     public Pipe(Image img) {
         y = 0;
         pipeImage = img;
         pipeHeight = pipeImage.getHeight(null);
         pipeWidth = pipeImage.getWidth(null);
+
     }
     public int getX() {
         return x;
