@@ -1,8 +1,9 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -27,12 +28,15 @@ public class Game extends JPanel {
     private GameLogo gameLogo;
     private Ground ground1;
     private Ground ground2;
+    private FontImporter flappyBirdFont;
+    private SFXImporter flapSFX;
+    private SFXImporter hitSFX;
+    private SFXImporter pointSFX;
+    private JButton startButton;
+    private JButton OKButton;
     private Timer birdAndGroundTimer;
     private Timer placePipesTimer;
     private ArrayList<Pipe> pipes;
-    private JButton startButton;
-    private JButton OKButton;
-    private FontImporter flappyBirdFont;
     public Game() {
         background = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/flappybirdbg.png"))).getImage();
         bottomPipe = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/bottompipe.png"))).getImage();
@@ -57,6 +61,7 @@ public class Game extends JPanel {
         ground1 = new Ground(0);
         ground2 = new Ground(width);
         flappyBirdFont = new FontImporter("Font/flappyBirdFont.TTF");
+        flapSFX = new SFXImporter("SFX/flapSFX.wav");
         addTimer();
         addButtons();
         addMouseAndKeyListener();
@@ -124,6 +129,8 @@ public class Game extends JPanel {
             public void mousePressed(MouseEvent e) {
                 if(!gameOver && !startButton.isVisible()) {
                     addBirdVelocity();
+                    flapSFX.getSfx().start();
+                    flapSFX.getSfx().setFramePosition(0);
                 }
             }
         });
