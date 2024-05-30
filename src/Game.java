@@ -1,3 +1,4 @@
+import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
@@ -32,6 +33,7 @@ public class Game extends JPanel {
     private SFXImporter flapSFX;
     private SFXImporter hitSFX;
     private SFXImporter pointSFX;
+    private SFXImporter clickSFX;
     private JButton startButton;
     private JButton OKButton;
     private Timer birdAndGroundTimer;
@@ -49,7 +51,7 @@ public class Game extends JPanel {
         width = WIDTH;
         height = HEIGHT;
         score = 0;
-        highScore = 0;
+        highScore = HighScoreManager.loadHighScore();
         pipeAndGroundVelocity = -4;
         gameOver = false;
         birdFlying = false;
@@ -61,14 +63,17 @@ public class Game extends JPanel {
         ground1 = new Ground(0);
         ground2 = new Ground(width);
         flappyBirdFont = new FontImporter("Font/flappyBirdFont.TTF");
-        flapSFX = new SFXImporter("SFX/flapSFX.wav");
+        flapSFX = new SFXImporter("Sfx/flapSFX.wav");
+        hitSFX = new SFXImporter("Sfx/hitSFX.wav");
+        pointSFX = new SFXImporter("Sfx/pointSFX.wav");
+        clickSFX = new SFXImporter("Sfx/clickSFX.wav");
         addTimer();
         addButtons();
         addMouseAndKeyListener();
         setFocusable(true);
     }
     public void addTimer(){
-        birdAndGroundTimer = new Timer(1000/55, e -> {
+        birdAndGroundTimer = new Timer(1000/50, e -> {
             ground1.setX(ground1.getX() + pipeAndGroundVelocity);
             ground2.setX(ground2.getX() + pipeAndGroundVelocity);
             if (ground1.getX() <= -ground1.getGroundWidth()) {
@@ -97,6 +102,7 @@ public class Game extends JPanel {
                     for (Pipe pipe : pipes) {
                         pipe.setX(pipe.getX() + pipeAndGroundVelocity);
                         if (!pipe.isPassed() && bird.getX() > pipe.getX() + pipe.getPipeWidth()) {
+                            pointSFX.play();
                             score += 0.5;
                             pipe.setPassed(true);
                         }
@@ -106,6 +112,7 @@ public class Game extends JPanel {
                     }
                     if (score > highScore) {
                         highScore = (int) score;
+                        HighScoreManager.saveHighScore(highScore);
                     }
                     for (int i = 0; i < pipes.size(); i++) {
                         if (pipes.get(i).getX() + pipes.get(i).getPipeWidth() < 0) {
@@ -116,7 +123,7 @@ public class Game extends JPanel {
             }
             repaint();
         });
-        placePipesTimer = new Timer(1200, e -> {
+        placePipesTimer = new Timer(1400, e -> {
             if(!gameOver){
                 placePipes();
             }
@@ -129,8 +136,6 @@ public class Game extends JPanel {
             public void mousePressed(MouseEvent e) {
                 if(!gameOver && !startButton.isVisible()) {
                     addBirdVelocity();
-                    flapSFX.getSfx().start();
-                    flapSFX.getSfx().setFramePosition(0);
                 }
             }
         });
@@ -147,6 +152,7 @@ public class Game extends JPanel {
     }
     public void addBirdVelocity() {
         birdVelocity = -13;
+        flapSFX.play();
         birdFlying = true;
         placePipesTimer.start();
         bird.setTimer(1,false);
@@ -179,6 +185,7 @@ public class Game extends JPanel {
         birdAndGroundTimer.stop();
         placePipesTimer.stop();
         bird.switchImage(4);
+        hitSFX.play();
     }
     public void addButtons(){
         setLayout(null);
@@ -189,7 +196,13 @@ public class Game extends JPanel {
         startButton.setBounds(x,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
         add(startButton);
         startButton.addActionListener(e -> {
-            startButton.setVisible(false);
+            clickSFX.getSfx().start();
+            clickSFX.getSfx().addLineListener(event -> {
+                if(event.getType() == LineEvent.Type.STOP){
+                    startButton.setVisible(false);
+                    clickSFX.getSfx().setMicrosecondPosition(0);
+                }
+            });
         });
         OKButton = new JButton(OKButtonImage);
         OKButton.setBounds(x,500,startButtonImage.getIconWidth(),startButtonImage.getIconHeight());
@@ -197,17 +210,23 @@ public class Game extends JPanel {
         OKButton.setVisible(false);
         OKButton.addActionListener(e -> {
             if(gameOver){
-                gameOver = false;
-                OKButton.setVisible(false);
-                bird.setY(height/3);
-                birdVelocity = 0;
-                score = 0;
-                pipes.clear();
-                bird.setTimer(2,false);
-                bird.setTimer(1,true);
-                birdAndGroundTimer.start();
-                birdFlying = false;
-                startButton.setVisible(true);
+                clickSFX.getSfx().start();
+                clickSFX.getSfx().addLineListener(event -> {
+                    if(event.getType() == LineEvent.Type.STOP){
+                        gameOver = false;
+                        OKButton.setVisible(false);
+                        bird.setY(height/3);
+                        birdVelocity = 0;
+                        score = 0;
+                        pipes.clear();
+                        bird.setTimer(2,false);
+                        bird.setTimer(1,true);
+                        birdAndGroundTimer.start();
+                        birdFlying = false;
+                        startButton.setVisible(true);
+                        clickSFX.getSfx().setMicrosecondPosition(0);
+                    }
+                });
             }
         });
     }
