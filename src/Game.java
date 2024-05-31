@@ -2,7 +2,6 @@ import javax.sound.sampled.LineEvent;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Objects;
 
 public class Game extends JPanel {
     public static int WIDTH;
@@ -18,10 +17,14 @@ public class Game extends JPanel {
     private double score;
     private boolean gameOver;
     private boolean birdFlying;
+    private boolean giveSilverMedal;
+    private boolean giveGoldMedal;
     private final Image background;
     private final Image guideImg;
     private final Image getReadyImg;
     private final Image gameOverImg;
+    private final Image silverMedal;
+    private final Image goldMedal;
     private final Bird bird;
     private final GameLogo gameLogo;
     private final Ground ground1;
@@ -37,12 +40,14 @@ public class Game extends JPanel {
     private Timer grassTimer;
 
     public Game() {
-        background = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/flappybirdbg.png"))).getImage();
-        guideImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/guideImg.png"))).getImage();
-        getReadyImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/getReadyImg.png"))).getImage();
-        gameOverImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/gameOverImg.png"))).getImage();
-        Image groundImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/ground.png"))).getImage();
-        Image grassImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/grass.png"))).getImage();
+        background = Images.flappyBirdBgImg;
+        guideImg = Images.guideImg;
+        getReadyImg = Images.getReadyImg;
+        gameOverImg = Images.gameOverImg;
+        Image groundImg = Images.groundImg;
+        Image grassImg = Images.grassImg;
+        silverMedal = Images.silverMedalImg;
+        goldMedal = Images.silverMedalImg;
 
         WIDTH = background.getWidth(null);
         HEIGHT = background.getHeight(null);
@@ -57,6 +62,7 @@ public class Game extends JPanel {
 
         gameOver = false;
         birdFlying = false;
+        giveSilverMedal = false;
 
         bird = new Bird();
         gameLogo = new GameLogo();
@@ -131,9 +137,11 @@ public class Game extends JPanel {
                             setGameOver();
                         }
                     }
-                    if (score > highScore) {
-                        highScore = (int) score;
-                        HighScoreManager.saveHighScore(highScore);
+                    if (score >= highScore + 5) {
+                        giveSilverMedal = true;
+                    }
+                    if (score >= highScore + 10) {
+                        giveGoldMedal = true;
                     }
                     for (int i = 0; i < placePipes.getPipes().size(); i++) {
                         if (placePipes.getPipes().get(i).getX() + placePipes.getPipes().get(i).getPipeWidth() < 0) {
@@ -216,6 +224,10 @@ public class Game extends JPanel {
         bird.switchImage(4);
         sfx.getSoundTrack().stop();
         sfx.getSoundTrack().setMicrosecondPosition(0);
+        if (score > highScore) {
+            highScore = (int) score;
+            HighScoreManager.saveHighScore(highScore);
+        }
     }
     public void addButtons(){
         setLayout(null);
@@ -253,6 +265,8 @@ public class Game extends JPanel {
                         birdAndGroundTimer.start();
                         grassTimer.start();
                         birdFlying = false;
+                        giveSilverMedal = false;
+                        giveGoldMedal = false;
                         buttons.getStartButton().setVisible(true);
                         buttons.getEasyButton().setVisible(true);
                         buttons.getHardButton().setVisible(true);
@@ -316,6 +330,12 @@ public class Game extends JPanel {
             g.setColor(Color.white);
             g.drawString("Best: " + highScore,247, 250);
             g.drawString("Score: " + (int)score,35,250);
+        }
+        if(gameOver && giveSilverMedal){
+            g.drawImage(silverMedal, (width - silverMedal.getWidth(null)*3)/2,310,silverMedal.getWidth(null)*3,silverMedal.getHeight(null)*3,null);
+        }
+        if(gameOver && giveGoldMedal){
+            g.drawImage(goldMedal, (width - goldMedal.getWidth(null)*3)/2,310,goldMedal.getWidth(null)*3,goldMedal.getHeight(null)*3,null);
         }
         if(!buttons.getStartButton().isVisible() && !birdFlying && !gameOver){
             g.drawImage(getReadyImg,(width - getReadyImg.getWidth(null))/2,120,getReadyImg.getWidth(null),getReadyImg.getHeight(null),null);

@@ -3,13 +3,13 @@ import java.awt.*;
 import java.util.Objects;
 
 public class GameLogo {
-    private int x;
-    private int y;
-    private int width;
-    private int height;
-    private Image logoImage;
+    private final int x;
+    private final int y;
+    private final int width;
+    private final int height;
+    private final Image logoImage;
     public GameLogo() {
-        logoImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/flappyBirdGameLogo.png"))).getImage();
+        logoImage = Images.logoImg;
         width = logoImage.getWidth(null);
         height = logoImage.getHeight(null);
         x = (int) ((Game.WIDTH - width - Bird.WIDTH)/2.5);
@@ -29,8 +29,5 @@ public class GameLogo {
     }
     public Image getLogoImage() {
         return logoImage;
-    }
-    public void setY(int y) {
-        this.y = y;
     }
 }

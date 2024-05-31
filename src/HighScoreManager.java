@@ -8,7 +8,7 @@ public class HighScoreManager {
         try (FileWriter writer = new FileWriter("highscore.txt")) {
             writer.write(String.valueOf(highScore));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing");
         }
     }
     public static int loadHighScore() {

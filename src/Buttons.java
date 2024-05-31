@@ -2,18 +2,18 @@ import javax.swing.*;
 import java.util.Objects;
 
 public class Buttons {
-    private JButton startButton;
-    private JButton OKButton;
-    private JButton easyButton;
-    private JButton normalButton;
-    private JButton hardButton;
+    private final JButton startButton;
+    private final JButton OKButton;
+    private final JButton easyButton;
+    private final JButton normalButton;
+    private final JButton hardButton;
 
     public Buttons() {
-        ImageIcon startButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/startButton.png")));
-        ImageIcon OKButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/OKButton.png")));
-        ImageIcon easyButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/easyButton.png")));
-        ImageIcon normalButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/normalButton.png")));
-        ImageIcon hardButtonImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/hardButton.png")));
+        ImageIcon startButtonImage = Images.startButtonImg;
+        ImageIcon OKButtonImage = Images.OKButtonImg;
+        ImageIcon easyButtonImage = Images.easyButtonImg;
+        ImageIcon normalButtonImage = Images.normalButtonImg;
+        ImageIcon hardButtonImage = Images.hardButtonImg;
         startButton = new JButton(startButtonImage);
         OKButton = new JButton(OKButtonImage);
         easyButton = new JButton(easyButtonImage);

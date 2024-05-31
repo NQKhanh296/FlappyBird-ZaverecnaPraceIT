@@ -19,10 +19,10 @@ public class Bird {
     private final Timer flyingTimer;
     public Bird() {
         Y = Game.HEIGHT / 3;
-        birdDownImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/birdDown.png"))).getImage();
-        birdUpImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/birdUp.png"))).getImage();
-        birdNormal = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/birdnormal.png"))).getImage();
-        deadBird = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/deadBird.png"))).getImage();
+        birdDownImg = Images.birdDownImg;
+        birdUpImg = Images.birdUpImg;
+        birdNormal = Images.birdNormalImg;
+        deadBird = Images.deadBird;
         birdImage = birdNormal;
         WIDTH = birdImage.getWidth(null);
         HEIGHT = birdImage.getHeight(null);

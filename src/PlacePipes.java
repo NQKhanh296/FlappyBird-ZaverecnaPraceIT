@@ -5,14 +5,14 @@ import java.util.Objects;
 import java.util.Random;
 
 public class PlacePipes {
-    private ArrayList<Pipe> pipes;
-    private Image bottomPipe;
-    private Image topPipe;
+    private final ArrayList<Pipe> pipes;
+    private final Image bottomPipe;
+    private final Image topPipe;
 
     public PlacePipes() {
         pipes = new ArrayList<>();
-        bottomPipe = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/bottompipe.png"))).getImage();
-        topPipe = new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/toppipe.png"))).getImage();
+        bottomPipe = Images.bottomPipeImg;
+        topPipe = Images.topPipeImg;
     }
     public void placePipes(){
         Pipe toppipe = new Pipe(topPipe);

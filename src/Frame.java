@@ -11,7 +11,7 @@ public class Frame {
         jFrame.add(game);
         jFrame.pack();
         game.requestFocus();
-        jFrame.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("Images/birdNormal.png"))).getImage());
+        jFrame.setIconImage(Images.birdNormalImg);
         jFrame.setVisible(true);
     }
 }
