@@ -47,7 +47,7 @@ public class Game extends JPanel {
         Image groundImg = Images.groundImg;
         Image grassImg = Images.grassImg;
         silverMedal = Images.silverMedalImg;
-        goldMedal = Images.silverMedalImg;
+        goldMedal = Images.goldMedalImg;
 
         WIDTH = background.getWidth(null);
         HEIGHT = background.getHeight(null);
@@ -87,7 +87,9 @@ public class Game extends JPanel {
         setFocusable(true);
     }
     public void addTimer(){
+        // Method to add all the timers
         grassTimer = new Timer(delay,e -> {
+            // Make the grass move
             grass1.setX(grass1.getX() + grassVelocity);
             grass2.setX(grass2.getX() + grassVelocity);
             if (grass1.getX() <= -grass1.getWidth()) {
@@ -100,7 +102,7 @@ public class Game extends JPanel {
         });
 
         birdAndGroundTimer = new Timer(delay, e -> {
-
+            // Make the ground move
             ground1.setX(ground1.getX() + pipeAndGroundVelocity);
             ground2.setX(ground2.getX() + pipeAndGroundVelocity);
             if (ground1.getX() <= -ground1.getWidth()) {
@@ -109,20 +111,20 @@ public class Game extends JPanel {
             if (ground2.getX() <= -ground2.getWidth()) {
                 ground2.setX(ground1.getX() + ground1.getWidth());
             }
-
             if(buttons.getStartButton().isVisible()){
                 bird.setX(gameLogo.getX() + gameLogo.getWidth() + (bird.getBirdWidth() / 3));
             }
             if(!buttons.getStartButton().isVisible()){
                 bird.setX(width / 8);
             }
+            // Add gravity and make the bird fall down if space key is not pressed or if mouse is not clicked
             if(birdFlying){
                 birdVelocity += 1;
                 bird.setY(Math.max(bird.getY(), 0));
                 bird.setY(Math.min(bird.getY(), height - ground1.getHeight() - bird.getBirdHeight()));
                 int targetY = height - ground1.getHeight() - bird.getBirdHeight();
                 if (!gameOver && Math.abs(bird.getY() - targetY) < 3) {
-                    setGameOver();
+                    setGameOver(); //  If the bird collides with the ground, then game over
                 }
                 if (!gameOver && bird.getY() + bird.getBirdHeight() < height - ground1.getHeight()) {
                     bird.setY(bird.getY() + birdVelocity);
@@ -130,18 +132,13 @@ public class Game extends JPanel {
                         pipe.setX(pipe.getX() + pipeAndGroundVelocity);
                         if (!pipe.isPassed() && bird.getX() > pipe.getX() + pipe.getPipeWidth()) {
                             sfx.getPointSFX().start();
-                            score += 0.5;
+                            score += 0.5; // Add score, for top pipe is 0.5 point, for bottom pipe is 0.5 point too
                             pipe.setPassed(true);
                         }
+                        updateMedals(); // chose a medal to give the player
                         if (collision(bird, pipe)) {
-                            setGameOver();
+                            setGameOver(); // If the bird collides, then game over
                         }
-                    }
-                    if (score >= highScore + 5) {
-                        giveSilverMedal = true;
-                    }
-                    if (score >= highScore + 10) {
-                        giveGoldMedal = true;
                     }
                     for (int i = 0; i < placePipes.getPipes().size(); i++) {
                         if (placePipes.getPipes().get(i).getX() + placePipes.getPipes().get(i).getPipeWidth() < 0) {
@@ -154,6 +151,7 @@ public class Game extends JPanel {
         });
 
         placePipesTimer = new Timer(placePipesTimerDelay, e -> {
+            // If the game is started, start placing pipes
             if(!gameOver){
                 placePipes.placePipes();
             }
@@ -163,11 +161,12 @@ public class Game extends JPanel {
         birdAndGroundTimer.start();
     }
     public void addMouseAndKeyListener(){
+        // Add MouseListener and KeyListener(space)
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if(!gameOver && !buttons.getStartButton().isVisible()) {
-                    addBirdVelocity();
+                    addBirdVelocity(); // When clicked, add bird velocity
                 }
             }
         });
@@ -176,7 +175,7 @@ public class Game extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if(!gameOver && !buttons.getStartButton().isVisible()) {
                     if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                        addBirdVelocity();
+                        addBirdVelocity(); // When space bar is pressed, add bird velocity
                     }
                 }
             }
@@ -191,14 +190,15 @@ public class Game extends JPanel {
         bird.setTimer(2,true);
     }
     public void setDelay(int number){
+        // Method to change timers delay between easy, normal, and hard difficulty
         switch (number){
             case 1 -> {
                 delay = 1000/35;
-                placePipesTimerDelay = 1800;
+                placePipesTimerDelay = 2000;
             }
             case 2 -> {
                 delay = 1000/75;
-                placePipesTimerDelay = 1000;
+                placePipesTimerDelay = 900;
             }
             default -> {
                 delay = 1000/55;
@@ -206,6 +206,13 @@ public class Game extends JPanel {
             }
         }
     }
+
+    /**
+     * check if the bird collides with the pipe or not
+     * @param a the bird
+     * @param b the pipe
+     * @return true if collides, false if not
+     */
     public boolean collision(Bird a, Pipe b) {
         return a.getX() < b.getX() + b.getPipeWidth() &&
                 a.getX() + a.getBirdWidth() > b.getX() &&
@@ -213,6 +220,7 @@ public class Game extends JPanel {
                 a.getY() + a.getBirdHeight() > b.getY();
     }
     public void setGameOver(){
+        // Stop all the timers and save the highScore to a text file
         sfx.getHitSFX().start();
         gameOver = true;
         buttons.getOKButton().setVisible(true);
@@ -229,7 +237,17 @@ public class Game extends JPanel {
             HighScoreManager.saveHighScore(highScore);
         }
     }
+    public void updateMedals() {
+        // Give player medal based on the player score
+        if (score >= highScore + 5) {
+            giveSilverMedal = true;
+        }
+        if (score < 10 && score >= highScore + 10) {
+            giveGoldMedal = true;
+        }
+    }
     public void addButtons(){
+        // Add buttons to the game, start button to start the game, easy, normal, hard button to set the game difficulty and ok button to reset all the timers and so on
         setLayout(null);
         add(buttons.getStartButton());
         add(buttons.getOKButton());
@@ -310,6 +328,7 @@ public class Game extends JPanel {
     }
     @Override
     protected void paintComponent(Graphics g) {
+        // Draw all the components based on the game scene
         g.drawImage(background,0,0,width,height,null);
         g.drawImage(grass1.getImage(),grass1.getX(),grass1.getY(),grass1.getWidth(),grass1.getHeight(),null);
         g.drawImage(grass2.getImage(),grass2.getX(),grass2.getY(),grass2.getWidth(),grass2.getHeight(),null);
@@ -345,4 +364,55 @@ public class Game extends JPanel {
             g.drawImage(gameLogo.getLogoImage(),gameLogo.getX(),gameLogo.getY(),gameLogo.getWidth(),gameLogo.getHeight(),null);
         }
     }
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
+    }
+
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public boolean isBirdFlying() {
+        return birdFlying;
+    }
+
+    public void setBirdFlying(boolean birdFlying) {
+        this.birdFlying = birdFlying;
+    }
+
+    public boolean isGiveSilverMedal() {
+        return giveSilverMedal;
+    }
+
+    public boolean isGiveGoldMedal() {
+        return giveGoldMedal;
+    }
+
+    public Bird getBird() {
+        return bird;
+    }
+
+    public PlacePipes getPlacePipes() {
+        return placePipes;
+    }
+
+    public Timer getBirdAndGroundTimer() {
+        return birdAndGroundTimer;
+    }
+
 }

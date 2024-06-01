@@ -1,6 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
+
 
 public class GameLogo {
     private final int x;

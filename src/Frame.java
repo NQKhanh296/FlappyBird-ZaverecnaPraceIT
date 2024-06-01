@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.util.Objects;
 public class Frame {
     public void startGame(){
         JFrame jFrame = new JFrame("Flappy Bird");
