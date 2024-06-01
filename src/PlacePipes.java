@@ -1,7 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 public class PlacePipes {

@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 public class Bird {
     public static int WIDTH;
     public static int HEIGHT;
