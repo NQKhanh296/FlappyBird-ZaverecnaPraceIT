@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.util.Objects;
 
 public class Buttons {
     private final JButton startButton;

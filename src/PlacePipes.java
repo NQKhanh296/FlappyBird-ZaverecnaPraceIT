@@ -1,7 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 public class PlacePipes {
@@ -15,6 +13,7 @@ public class PlacePipes {
         topPipe = Images.topPipeImg;
     }
     public void placePipes(){
+        // Place top and bottom pipes with a random coordinates for the opening space
         Pipe toppipe = new Pipe(topPipe);
         Random random = new Random();
         int openingSpace = 180;
