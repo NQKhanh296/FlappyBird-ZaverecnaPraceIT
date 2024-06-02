@@ -9,45 +9,45 @@ public class SFX {
 
     public SFX(){
         try {
-            AudioInputStream audioInputStream1 = AudioSystem.getAudioInputStream(Resources.click);
             clickSFX = AudioSystem.getClip();
-            clickSFX.open(audioInputStream1);
+            assert Resources.click != null;
+            clickSFX.open(AudioSystem.getAudioInputStream(Resources.click));
             clickSFX.addLineListener(event -> {
                 if(event.getType() == LineEvent.Type.STOP){
                     clickSFX.setMicrosecondPosition(0);
                 }
             });
 
-            AudioInputStream audioInputStream2 = AudioSystem.getAudioInputStream(Resources.flap);
             flapSFX = AudioSystem.getClip();
-            flapSFX.open(audioInputStream2);
+            assert Resources.flap != null;
+            flapSFX.open(AudioSystem.getAudioInputStream(Resources.flap));
             flapSFX.addLineListener(event -> {
                 if(event.getType() == LineEvent.Type.STOP){
                     flapSFX.setMicrosecondPosition(0);
                 }
             });
 
-            AudioInputStream audioInputStream3 = AudioSystem.getAudioInputStream(Resources.hit);
             hitSFX = AudioSystem.getClip();
-            hitSFX.open(audioInputStream3);
+            assert Resources.hit != null;
+            hitSFX.open(AudioSystem.getAudioInputStream(Resources.hit));
             hitSFX.addLineListener(event -> {
                 if(event.getType() == LineEvent.Type.STOP){
                     hitSFX.setMicrosecondPosition(0);
                 }
             });
 
-            AudioInputStream audioInputStream4 = AudioSystem.getAudioInputStream(Resources.point);
             pointSFX = AudioSystem.getClip();
-            pointSFX.open(audioInputStream4);
+            assert Resources.point != null;
+            pointSFX.open(AudioSystem.getAudioInputStream(Resources.point));
             pointSFX.addLineListener(event -> {
                 if(event.getType() == LineEvent.Type.STOP){
                     pointSFX.setMicrosecondPosition(0);
                 }
             });
 
-            AudioInputStream audioInputStream5 = AudioSystem.getAudioInputStream(Resources.music);
             soundTrack = AudioSystem.getClip();
-            soundTrack.open(audioInputStream5);
+            assert Resources.music != null;
+            soundTrack.open(AudioSystem.getAudioInputStream(Resources.music));
             soundTrack.addLineListener(event -> {
                 if(event.getType() == LineEvent.Type.STOP){
                     soundTrack.setMicrosecondPosition(0);

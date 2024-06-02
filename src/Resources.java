@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.net.URL;
 import java.util.Objects;
 
 public class Resources {
@@ -23,11 +24,11 @@ public class Resources {
     public  static final ImageIcon OKButtonImg = new ImageIcon(Objects.requireNonNull(Resources.class.getResource("Images/OKButton.png")));
     public  static final Image silverMedalImg = new ImageIcon(Objects.requireNonNull(Resources.class.getResource("Images/silverMedal.png"))).getImage();
     public  static final ImageIcon startButtonImg = new ImageIcon(Objects.requireNonNull(Resources.class.getResource("Images/startButton.png")));
-    public  static final Image topPipeImg = new ImageIcon(Objects.requireNonNull(   Resources.class.getResource("Images/toppipe.png"))).getImage();
-    public static final File click = new File("src/Sfx/clickSFX.wav");
-    public static final File music = new File("src/Sfx/FlappyBirdSoundTrack.wav");
-    public static final File flap = new File("src/Sfx/flapSFX.wav");
-    public static final File hit = new File("src/Sfx/hitSFX.wav");
-    public static final File point = new File("src/Sfx/pointSFX.wav");
+    public  static final Image topPipeImg = new ImageIcon(Objects.requireNonNull(Resources.class.getResource("Images/toppipe.png"))).getImage();
+    public static final URL click = Resources.class.getResource("/Sfx/clickSFX.wav");
+    public static final URL music = Resources.class.getResource("/Sfx/FlappyBirdSoundTrack.wav");
+    public static final URL flap = Resources.class.getResource("/Sfx/flapSFX.wav");
+    public static final URL hit = Resources.class.getResource("/Sfx/hitSFX.wav");
+    public static final URL point = Resources.class.getResource("/Sfx/pointSFX.wav");
 
 }
