@@ -1,5 +1,4 @@
 import javax.sound.sampled.*;
-import java.util.Objects;
 
 public class SFX {
     private Clip clickSFX;
@@ -10,7 +9,7 @@ public class SFX {
 
     public SFX(){
         try {
-            AudioInputStream audioInputStream1 = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("Sfx/clickSFX.wav")));
+            AudioInputStream audioInputStream1 = AudioSystem.getAudioInputStream(Resources.click);
             clickSFX = AudioSystem.getClip();
             clickSFX.open(audioInputStream1);
             clickSFX.addLineListener(event -> {
@@ -19,7 +18,7 @@ public class SFX {
                 }
             });
 
-            AudioInputStream audioInputStream2 = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("Sfx/flapSFX.wav")));
+            AudioInputStream audioInputStream2 = AudioSystem.getAudioInputStream(Resources.flap);
             flapSFX = AudioSystem.getClip();
             flapSFX.open(audioInputStream2);
             flapSFX.addLineListener(event -> {
@@ -28,7 +27,7 @@ public class SFX {
                 }
             });
 
-            AudioInputStream audioInputStream3 = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("Sfx/hitSFX.wav")));
+            AudioInputStream audioInputStream3 = AudioSystem.getAudioInputStream(Resources.hit);
             hitSFX = AudioSystem.getClip();
             hitSFX.open(audioInputStream3);
             hitSFX.addLineListener(event -> {
@@ -37,7 +36,7 @@ public class SFX {
                 }
             });
 
-            AudioInputStream audioInputStream4 = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("Sfx/pointSFX.wav")));
+            AudioInputStream audioInputStream4 = AudioSystem.getAudioInputStream(Resources.point);
             pointSFX = AudioSystem.getClip();
             pointSFX.open(audioInputStream4);
             pointSFX.addLineListener(event -> {
@@ -46,7 +45,7 @@ public class SFX {
                 }
             });
 
-            AudioInputStream audioInputStream5 = AudioSystem.getAudioInputStream(Objects.requireNonNull(getClass().getResourceAsStream("Sfx/FlappyBirdSoundTrack.wav")));
+            AudioInputStream audioInputStream5 = AudioSystem.getAudioInputStream(Resources.music);
             soundTrack = AudioSystem.getClip();
             soundTrack.open(audioInputStream5);
             soundTrack.addLineListener(event -> {
@@ -58,7 +57,6 @@ public class SFX {
             System.out.println("Failed to open .wav file!");
         }
     }
-
 
     public Clip getClickSFX() {
         return clickSFX;

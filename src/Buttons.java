@@ -9,11 +9,11 @@ public class Buttons {
     private final JButton hardButton;
 
     public Buttons() {
-        ImageIcon startButtonImage = Images.startButtonImg;
-        ImageIcon OKButtonImage = Images.OKButtonImg;
-        ImageIcon easyButtonImage = Images.easyButtonImg;
-        ImageIcon normalButtonImage = Images.normalButtonImg;
-        ImageIcon hardButtonImage = Images.hardButtonImg;
+        ImageIcon startButtonImage = Resources.startButtonImg;
+        ImageIcon OKButtonImage = Resources.OKButtonImg;
+        ImageIcon easyButtonImage = Resources.easyButtonImg;
+        ImageIcon normalButtonImage = Resources.normalButtonImg;
+        ImageIcon hardButtonImage = Resources.hardButtonImg;
         startButton = new JButton(startButtonImage);
         OKButton = new JButton(OKButtonImage);
         easyButton = new JButton(easyButtonImage);

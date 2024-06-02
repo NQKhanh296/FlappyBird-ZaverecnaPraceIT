@@ -8,7 +8,7 @@ public class GameLogo {
     private final int height;
     private final Image logoImage;
     public GameLogo() {
-        logoImage = Images.logoImg;
+        logoImage = Resources.logoImg;
         width = logoImage.getWidth(null);
         height = logoImage.getHeight(null);
         x = (int) ((Game.WIDTH - width - Bird.WIDTH)/2.5);

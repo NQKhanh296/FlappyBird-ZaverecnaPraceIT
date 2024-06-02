@@ -6,7 +6,7 @@ class GameTest {
     @Test
     public void testPassed(){
         Game game = new Game();
-        game.getPlacePipes().getPipes().add(new Pipe(Images.topPipeImg));
+        game.getPlacePipes().getPipes().add(new Pipe(Resources.topPipeImg));
         game.getPlacePipes().getPipes().get(0).setX(200);
         if(game.getBird().getX() > game.getPlacePipes().getPipes().get(0).getX() +  game.getPlacePipes().getPipes().get(0).getPipeWidth()){
             game.getBirdAndGroundTimer().stop();
@@ -18,7 +18,7 @@ class GameTest {
     @Test
     public void testScoreIncrementation(){
         Game game = new Game();
-        game.getPlacePipes().getPipes().add(new Pipe(Images.topPipeImg));
+        game.getPlacePipes().getPipes().add(new Pipe(Resources.topPipeImg));
         game.getPlacePipes().getPipes().get(0).setX(200);
         if(game.getPlacePipes().getPipes().get(0).isPassed()){
             game.getBirdAndGroundTimer().stop();
@@ -38,7 +38,7 @@ class GameTest {
     public void testGiveGoldMedal(){
         Game game = new Game();
         game.setHighScore(10);
-        game.setScore(20);
+        game.setScore(21);
         game.updateMedals();
         assertTrue(game.isGiveGoldMedal());
     }

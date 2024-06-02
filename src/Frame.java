@@ -10,7 +10,7 @@ public class Frame {
         jFrame.add(game);
         jFrame.pack();
         game.requestFocus();
-        jFrame.setIconImage(Images.birdNormalImg);
+        jFrame.setIconImage(Resources.birdNormalImg);
         jFrame.setVisible(true);
     }
 }

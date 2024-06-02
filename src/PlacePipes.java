@@ -9,8 +9,8 @@ public class PlacePipes {
 
     public PlacePipes() {
         pipes = new ArrayList<>();
-        bottomPipe = Images.bottomPipeImg;
-        topPipe = Images.topPipeImg;
+        bottomPipe = Resources.bottomPipeImg;
+        topPipe = Resources.topPipeImg;
     }
     public void placePipes(){
         // Place top and bottom pipes with a random coordinates for the opening space

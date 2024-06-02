@@ -40,14 +40,14 @@ public class Game extends JPanel {
     private Timer grassTimer;
 
     public Game() {
-        background = Images.flappyBirdBgImg;
-        guideImg = Images.guideImg;
-        getReadyImg = Images.getReadyImg;
-        gameOverImg = Images.gameOverImg;
-        Image groundImg = Images.groundImg;
-        Image grassImg = Images.grassImg;
-        silverMedal = Images.silverMedalImg;
-        goldMedal = Images.goldMedalImg;
+        background = Resources.flappyBirdBgImg;
+        guideImg = Resources.guideImg;
+        getReadyImg = Resources.getReadyImg;
+        gameOverImg = Resources.gameOverImg;
+        Image groundImg = Resources.groundImg;
+        Image grassImg = Resources.grassImg;
+        silverMedal = Resources.silverMedalImg;
+        goldMedal = Resources.goldMedalImg;
 
         WIDTH = background.getWidth(null);
         HEIGHT = background.getHeight(null);
@@ -63,6 +63,7 @@ public class Game extends JPanel {
         gameOver = false;
         birdFlying = false;
         giveSilverMedal = false;
+        giveGoldMedal = false;
 
         bird = new Bird();
         gameLogo = new GameLogo();
@@ -209,6 +210,7 @@ public class Game extends JPanel {
 
     /**
      * check if the bird collides with the pipe or not
+     * URL : https://youtu.be/Xw2MEG-FBsE?si=TI8CPLaIouoj6EhJ
      * @param a the bird
      * @param b the pipe
      * @return true if collides, false if not
@@ -239,10 +241,10 @@ public class Game extends JPanel {
     }
     public void updateMedals() {
         // Give player medal based on the player score
-        if (score >= highScore + 5) {
+        if (score < highScore+10 && score >= highScore + 5) {
             giveSilverMedal = true;
         }
-        if (score < 10 && score >= highScore + 10) {
+        if (score >= highScore + 10) {
             giveGoldMedal = true;
         }
     }
